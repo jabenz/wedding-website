@@ -1,5 +1,3 @@
-// Buttons partial
-
 @import "partials/colors";
 
 .btn {
@@ -13,8 +11,8 @@
 }
 .btn:hover, .btn:focus {
 	color: $white-color;
-	border-color: $accent-color;
-	background-color: $accent-color;
+	border-color: $blue-accent;
+	background-color: $blue-accent;
 }
 .btn-white {
 	font-size: 13px;
@@ -26,23 +24,23 @@
 	border-color: $txt-light;
 }
 .btn-white:hover, .btn-white:focus {
-	color: $accent-color;
-	border-color: $accent-color;
+	color: $blue-accent;
+	border-color: $blue-accent;
 }
 .btn-fill {
 	color: $white-color;
-	border: solid 2px $accent-color;
+	border: solid 2px $blue-accent;
 	-moz-border-radius: 40px;
 	-webkit-border-radius: 40px;
 	border-radius: 40px;
 	display: inline-block;
 	text-transform: uppercase;
-	background-color: $accent-color;
+	background-color: $blue-accent;
 }
 .btn-fill:hover, .btn-fill:focus {
 	color: $white-color;
-	background-color: $accent-color-hover;
-	border-color: $accent-color-hover;
+	background-color: $blue-secondary;
+	border-color: $blue-secondary;
 }
 .btn-small {
 	padding: 8px 30px;

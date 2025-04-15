@@ -1,17 +1,12 @@
-// Google Fonts
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800);
 @import url(https://fonts.googleapis.com/css?family=Merriweather:400,300,400italic,300italic,700,700italic);
 @import url(https://fonts.googleapis.com/css?family=Nunito:400,300,700);
-// Imports
-//@import "compass";
+
 @import "partials/typography";
 @import "partials/buttons";
 @import "partials/colors";
 @import "partials/layout";
 
-/* ==========================================================================
-Global Styles
-========================================================================== */
 .group:after {
   content: "";
   display: table;
@@ -41,7 +36,6 @@ body {
   font-weight: $light;
   color: $txt-primary;
   -webkit-text-size-adjust: 100%;
-  //fix for iOS
 }
 *:focus {
   outline: none !important;
@@ -104,9 +98,6 @@ section .header {
   background-color: #000;
   border-radius: 4px;
 }
-/* ==========================================================================
-Animations
-========================================================================== */
 .pulse2 {
   animation-name: pulse2;
   animation-duration: 1s;
@@ -158,10 +149,6 @@ Animations
     transform: translate(-50%, 0)
   }
 }
-
-/* ==========================================================================
-Waypoinsts
-========================================================================== */
 .wp1, .wp2, .wp3, .wp4, .wp5, .wp6, .wp7, .wp8, .wp9 {
   visibility: hidden
 }
@@ -172,10 +159,6 @@ Waypoinsts
 .bounceInLeft, .bounceInRight, .fadeInUp, .fadeInUpDelay, .fadeInDown, .fadeInUpD, .fadeInLeft, .fadeInRight, .bounceInDown {
   visibility: visible
 }
-
-/* ==========================================================================
-Navigation
-========================================================================== */
 .header-nav.open {
   visibility: visible;
   opacity: 0.9;
@@ -246,10 +229,6 @@ Navigation
   visibility: hidden;
   transition: all 300ms ease-in-out;
 }
-
-/* ==========================================================================
-Hero
-========================================================================== */
 .hero {
   min-height: 750px;
   background: url('../img/hero-min.jpg') center center;
@@ -258,12 +237,6 @@ Hero
   -o-background-size: cover;
   background-size: cover;
   position: relative;
-
-  /*.rsvp-btn {
-    position: absolute;
-    bottom: 100px;
-    left: 50%;
-  }*/
   .down-arrow a {
     color: $txt-light;
   }
@@ -304,12 +277,10 @@ header {
   width: 1170px;
   margin: 0 auto;
   transition: padding 300ms ease-in-out;
-
   a {
     color: $txt-light;
     text-transform: uppercase;
     font-size: $nav-font-size;
-
     &.login {
       margin-right: 20px;
     }
@@ -323,14 +294,11 @@ header {
   ul.primary-nav {
     margin: 0 0 0 75px;
     padding: 0;
-
     li {
       display: inline;
-
       a {
         color: $txt-light;
         padding-right: 25px;
-
         &:hover {
           color: $accent-color;
         }
@@ -343,10 +311,8 @@ header {
   ul.member-actions {
     li {
       display: inline;
-
       a {
         color: $txt-light;
-
         &:hover {
           color: $accent-color;
         }
@@ -371,17 +337,9 @@ header {
   left: 50%;
   transform: translateX(-50%);
 }
-
-/* ==========================================================================
-Social share buttons
-========================================================================== */
 .share-bar {
   margin-top: 20px;
 }
-
-/* ==========================================================================
-Intro
-========================================================================== */
 .intro span.icon {
   font-size: 40px;
   color: $accent-color;
@@ -398,7 +356,6 @@ Intro
   display: inline-block;
   width: 80%;
 }
-
 #intro {
   padding-top: 40px;
   img {
@@ -409,13 +366,8 @@ Intro
 #intro p {
   text-align: center;
 }
-
-/* ==========================================================================
-Features-stack
-========================================================================== */
 .features {
   position: relative;
-
   p {
     margin-bottom: 0;
     padding-bottom: 0;
@@ -488,14 +440,9 @@ Features-stack
 .devices {
   position: relative;
 }
-
-/* ==========================================================================
-.features-extra
-========================================================================== */
 .features-extra {
   position: relative;
   z-index: 3;
-
   .btn {
     margin-top: 20px;
   }
@@ -509,16 +456,11 @@ Features-stack
     left: 50%;
   }
 }
-
-/* ==========================================================================
-.hero-strip
-========================================================================== */
 .hero-strip {
   margin-top: 120px;
   background: #333844 url("../img/polygonal-bg.jpg") no-repeat center center;
   padding-bottom: 190px;
   position: relative;
-
   i {
     font-family: $accent-font;
     font-weight: 300;
@@ -547,10 +489,6 @@ Features-stack
     transform: translateX(-50%);
   }
 }
-
-/* ==========================================================================
-.events
-========================================================================== */
 .events {
   .leftcol {
     padding-right: 100px;
@@ -559,7 +497,6 @@ Features-stack
   .rightcol {
     padding-left: 100px;
   }
-
   .time {
     font-size: 13px;
     font-style: italic;
@@ -567,13 +504,8 @@ Features-stack
     color: $txt-primary;
   }
 }
-
-/* ==========================================================================
-.blog
-========================================================================== */
 .blog {
   padding-bottom: 120px;
-
   img {
     width: 100%;
     height: auto;
@@ -595,7 +527,6 @@ Features-stack
   .blog-img-wrap {
     position: relative;
     overflow: hidden;
-
     .overlay {
       position: absolute;
       width: 100%;
@@ -643,19 +574,11 @@ Features-stack
     color: $txt-secondary;
   }
 }
-
-/* ==========================================================================
-Instagram
-========================================================================== */
 #instagram {
   img {
     width: 100%;
   }
 }
-
-/* ==========================================================================
-Engagement Pics
-========================================================================== */
 #eng-pics {
   img {
     width: 100%;
@@ -721,10 +644,6 @@ Engagement Pics
     z-index: -1;
   }
 }
-
-/* ==========================================================================
-Embed video
-========================================================================== */
 #video-bg {
   height: 300px;
 }
@@ -745,10 +664,6 @@ Embed video
 #video-content p {
   color: #ffffff;
 }
-
-/* ==========================================================================
-Google map
-========================================================================== */
 #map-canvas {
   height: 500px;
   width: 100%;
@@ -783,10 +698,6 @@ Google map
 .pointer-events-auto {
   pointer-events: auto;
 }
-
-/* ==========================================================================
-RSVP form
-========================================================================== */
 .rsvp {
   padding-bottom: 140px;
   .rsvp-form {
@@ -806,7 +717,6 @@ RSVP form
       border: solid 1px $keyline-color;
       text-align: left;
       position: relative;
-
       i {
         color: $accent-color;
         font-size: 14px;
@@ -852,10 +762,6 @@ RSVP form
     }
   }
 }
-
-/* ==========================================================================
-Footer
-========================================================================== */
 footer {
   .content {
     border-top: 1px solid $keyline-color;
@@ -889,10 +795,6 @@ footer {
     margin: 0 2px;
   }
 }
-
-/* ==========================================================================
-Bootstrap override
-========================================================================== */
 body.modal-open {
   padding-right:0 !important;
 }
