@@ -33,7 +33,7 @@ cd src/api/Function
 func start
 ```
 
-Nach erfolgreichem Build & Start können die Functions lokal aufgerufen werden, z.B. `curl -X POST http://localhost:7071/api/Rsvp`.
+Nach erfolgreichem Build & Start können die Functions lokal aufgerufen werden, z.B. `curl -X POST http://localhost:7234/api/Rsvp`.
 Die API-URL wird im lokalen Build-Prozess `npm run build:dev` auf diese URL geändert.
 
 # Einrichtung

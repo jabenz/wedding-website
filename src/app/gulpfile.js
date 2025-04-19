@@ -9,7 +9,7 @@ var replace = require('gulp-replace');
 // Define configuration for different environments
 var config = {
     development: {
-        functionApiUrl: 'http://localhost:7071/api'
+        functionApiUrl: 'http://localhost:7234/api'
     },
     production: {
         functionApiUrl: 'https://laura-und.marvin-stue.de/api'
