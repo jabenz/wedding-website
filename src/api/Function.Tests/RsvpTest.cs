@@ -15,7 +15,10 @@ public class RsvpTest
 {
     private readonly ILogger<Rsvp> _logger = Mock.Of<ILogger<Rsvp>>();
     private readonly Rsvp _function;
-    private readonly IOptions<RsvpOptions> _options = Options.Create(new RsvpOptions("123456"));
+    private readonly IOptions<RsvpOptions> _options = Options.Create(new RsvpOptions()
+    {
+        InviteCode = "123456"
+    });
 
     public RsvpTest()
     {
@@ -58,6 +61,22 @@ public class RsvpTest
         // Assert
         result.ShouldBeOfType<StatusCodeResult>()
             .StatusCode.ShouldBe(StatusCodes.Status405MethodNotAllowed);
+    }
+
+    [Fact]
+    public void ItRejectsOnWrongContentType()
+    {
+        // Arrange
+        var request = new DefaultHttpContext().Request;
+        request.Method = "POST";
+        request.ContentType = "application/json";
+
+        // Act
+        var result = _function.Run(request);
+
+        // Assert
+        result.ShouldBeOfType<StatusCodeResult>()
+            .StatusCode.ShouldBe(StatusCodes.Status415UnsupportedMediaType);
     }
 
     [Fact]

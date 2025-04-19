@@ -16,11 +16,23 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options)
     [Function("Rsvp")]
     public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
     {
+        if(options.Value.InviteCode == null)
+        {
+            _logger.LogError("Invite code is not set in configuration");
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+
         _logger.LogInformation("Processing RSVP request");
         if (!HttpMethods.IsPost(req.Method))
         {
             _logger.LogWarning("Request method {Method} not allowed", req.Method);
             return new StatusCodeResult(StatusCodes.Status405MethodNotAllowed);
+        }
+
+        if(!req.HasFormContentType)
+        {
+            _logger.LogWarning("Request content type {ContentType} not allowed", req.ContentType);
+            return new StatusCodeResult(StatusCodes.Status415UnsupportedMediaType);
         }
 
         RsvpRequest rsvpRequest;

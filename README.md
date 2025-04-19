@@ -106,3 +106,6 @@ Nur Werte die vom Default abweichen:
 - Free Tier Discount: Apply
 - Backup storage redundancy: Zone-redundant
 
+### Table vorbereiten
+
+- In der Resource über den Data-Explorer eine neue Tabelle anlegen `rsvps`, 1000 RU/s.
