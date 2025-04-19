@@ -8,12 +8,12 @@ on:
     branches:
       - master
     paths:
-      - "src/api/**"
+      - "src/api/Function/**"
       - ".github/workflows/azure-wed-functions.yml"
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/api' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/api/Function' # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
 
 jobs:

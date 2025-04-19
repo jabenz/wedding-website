@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace api
+namespace api.Function
 {
     public class Rsvp(ILogger<Rsvp> logger)
     {
