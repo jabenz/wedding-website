@@ -47,8 +47,15 @@ cd src/api/Function
 func start
 ```
 
-Nach erfolgreichem Build & Start können die Functions lokal aufgerufen werden, z.B. `curl -X POST http://localhost:7234/api/Rsvp`.
-Die API-URL wird im lokalen Build-Prozess `npm run build:dev` auf diese URL geändert.
+Nach erfolgreichem Build & Start können die Functions lokal aufgerufen werden, z.B.
+```bash
+curl \
+  -X POST "http://localhost:7234/api/Rsvp" \
+  -d "name=asd&email=asd@asd.de&extras=3&invite_code=123456" \
+  -H "content-type: application/x-www-form-urlencoded"
+```
+
+Die API-URL ist in der script.js hinterlegt. Diese wird je nach Build `npm run build:dev` / `npm run build:azure` auf die passende URL geändert.
 
 # Einrichtung
 

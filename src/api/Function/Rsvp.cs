@@ -51,7 +51,7 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
 
         if (rsvpRequest.InviteCode != options.Value.InviteCode)
         {
-            return new ForbidResult();
+            return new StatusCodeResult(StatusCodes.Status403Forbidden);
         }
 
         _logger.LogInformation("Valid rsvp request");

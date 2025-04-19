@@ -114,7 +114,8 @@ public class RsvpTest
         var result = await _function.RunAsync(request);
 
         // Assert
-        result.ShouldBeOfType<ForbidResult>();
+        result.ShouldBeOfType<StatusCodeResult>()
+            .StatusCode.ShouldBe(StatusCodes.Status403Forbidden);
     }
 
     [Fact]

@@ -13,8 +13,17 @@ builder.Services
     .AddApplicationInsightsTelemetryWorkerService()
     .ConfigureFunctionsApplicationInsights();
 
-builder.Services.AddOptions<RsvpOptions>().BindConfiguration("RsvpOptions");
-builder.Services.AddOptions<CosmosDbOptions>().BindConfiguration("CosmosDbOptions");
+builder.Services
+    .AddOptions<RsvpOptions>()
+    .BindConfiguration(nameof(RsvpOptions))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+builder.Services
+    .AddOptions<CosmosDbOptions>()
+    .BindConfiguration(nameof(CosmosDbOptions))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 builder.Services.AddScoped<ITableRepository, TableRepository>();
 
