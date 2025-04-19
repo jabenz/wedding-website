@@ -4,8 +4,7 @@
   "description": "A wedding website with loads of features.",
   "main": "npmfile.js",
   "scripts": {
-    "build": "gulp",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp"
   },
   "keywords": [
     "wedding",
