@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_TEST_PATH }}'
-          dotnet test --configuration Release --no-build --verbosity normal
+          dotnet test --configuration Release
           popd
       
       - name: Login to Azure
