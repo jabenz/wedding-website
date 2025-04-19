@@ -59,7 +59,7 @@ Die API-URL ist in der script.js hinterlegt. Diese wird je nach Build `npm run b
 
 # Einrichtung
 
-1. Ressourcen aus [Komponente](#komponenten) wie beschrieben einrichten. Die Verlinkung von Static Web App und Function erfolgt automatisch.
+1. Ressourcen aus [Komponente](#komponenten) wie beschrieben einrichten. Die Verlinkung von Static Web App und Function erfolgt per Hand nachdem beides da ist über die Web App (Bereich APIs).
 2. CNAME Record auf die Adresse der Static Web App setzen und in der App konfigurieren (*Custom domains*)
 3. Im [gulpfile.js](./src/app/gulpfile.js) die Function App URL für production setzen (*<https://laura-und.marvin-stue.de/api/Rsvp>*). Für lokale Tests `npm run build:dev` nicht vergessen.
 4. Google Maps Javascript API API-Key erzeugen und in der [index.html](./src/app/index.html) (Line 501) eintragen.
