@@ -55,6 +55,16 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_15AEA08C550444D88E75D755967BF4CC }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1030960201D44D97B8197447E360E024 }}
 
+      # Add this step to set the app settings before deploying
+      - name: 'Set Azure Function App Settings'
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az functionapp config appsettings set \
+              --name wed-funcs \
+              --resource-group wed-web \
+              --settings "RsvpOptions:InviteCode=${{ secrets.RSVP_INVITE_CODE }}"
+
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
