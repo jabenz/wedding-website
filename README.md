@@ -63,7 +63,7 @@ Die API-URL ist in der script.js hinterlegt. Diese wird je nach Build `npm run b
 2. CNAME Record auf die Adresse der Static Web App setzen und in der App konfigurieren (*Custom domains*)
 3. Im [gulpfile.js](./src/app/gulpfile.js) die Function App URL für production setzen (*<https://laura-und.marvin-stue.de/api/Rsvp>*). Für lokale Tests `npm run build:dev` nicht vergessen.
 4. Google Maps Javascript API API-Key erzeugen und in der [index.html](./src/app/index.html) (Line 501) eintragen.
-5. Mit Hilfe eines MD5 Generators, z.B. [hier](https://www.md5hashgenerator.com/) einen MD5 Hash einer sechstelligen Zahl generieren. Dies ist der Invite-Code. Der Hash wird in [gulpfile.js](./src/app/gulpfile.js) (`inviteCodeMd5`) eingetragen, die Zahl in den [Github Secrets](https://github.com/jabenz/wedding-website/settings/secrets/actions) (`RSVP_INVITE_CODE`).
+5. Mit Hilfe eines MD5 Generators, z.B. [hier](https://www.md5hashgenerator.com/) einen MD5 Hash einer sechstelligen Zahl generieren. Dies ist der Invite-Code. Der Hash wird in [gulpfile.js](./src/app/gulpfile.js) (`inviteCodeMd5`) eingetragen, die Zahl in den [Github Secrets](https://github.com/jabenz/wedding-website/settings/secrets/actions) (`RSVP_INVITE_CODE`). Nach Update der Codes muss ein Deployment laufen damit der in der Function gesetzt ist (oder man ändert die env var dort per Hand).
 
 # Komponenten
 

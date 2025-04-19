@@ -99,3 +99,6 @@ styles.min.css
 **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
+
+# Exlusion of sensitive files
+README.local.md
