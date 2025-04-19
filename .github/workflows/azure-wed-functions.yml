@@ -63,7 +63,7 @@ jobs:
             az functionapp config appsettings set \
               --name wed-funcs \
               --resource-group wed-web \
-              --settings "RsvpOptions:InviteCode=${{ secrets.RSVP_INVITE_CODE }}"
+              --settings "RsvpOptions__InviteCode=${{ secrets.RSVP_INVITE_CODE }}"
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1

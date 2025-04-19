@@ -27,6 +27,20 @@ Außerdem kann Caching je nach Browser Änderungen blockieren. In so einem Fall 
 ## Azure Functions
 
 Azure Functions werden für Funktionen wie RSVP genutzt. Sie können ebenfalls lokal getestet werden.
+Um die Function testen zu können, wird eine InviteCode configuration benötigt. Um diese zu erstellen, kann im `Function` folder eine eigene `local.settings.json` angelegt werden.
+Inhalt:
+
+```json
+{
+  "IsEncrypted": false,
+  "Values": {
+
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+    "RsvpOptions:InviteCode": "<MY-INVITE-CODE>"
+  }
+}
+```
 
 ```bash
 cd src/api/Function
@@ -78,3 +92,17 @@ Nur Werte die vom Default abweichen:
 - Model: .NET 8.0 - Isolated Worker
 - Application Insights: Enabled
 - Anonymous Access: Enabled
+
+## Cosmos DB
+
+Azure Cosmos DB Table Storage wird verwendet, um die RSVPs zu speichern.
+
+### Konfiguration
+
+Nur Werte die vom Default abweichen:
+
+- Workload: Azure Cosmos DB for Table
+- Availability Zones: Disabled
+- Free Tier Discount: Apply
+- Backup storage redundancy: Zone-redundant
+
