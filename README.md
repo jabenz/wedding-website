@@ -37,7 +37,7 @@ Inhalt:
 
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "RsvpOptions:InviteCode": "<MY-INVITE-CODE>"
+    "RsvpOptions:InviteCode": "123456" // Der wird so auch für dev in der website gesetzt
   }
 }
 ```
@@ -63,6 +63,7 @@ Die API-URL ist in der script.js hinterlegt. Diese wird je nach Build `npm run b
 2. CNAME Record auf die Adresse der Static Web App setzen und in der App konfigurieren (*Custom domains*)
 3. Im [gulpfile.js](./src/app/gulpfile.js) die Function App URL für production setzen (*<https://laura-und.marvin-stue.de/api/Rsvp>*). Für lokale Tests `npm run build:dev` nicht vergessen.
 4. Google Maps Javascript API API-Key erzeugen und in der [index.html](./src/app/index.html) (Line 501) eintragen.
+5. Mit Hilfe eines MD5 Generators, z.B. [hier](https://www.md5hashgenerator.com/) einen MD5 Hash einer sechstelligen Zahl generieren. Dies ist der Invite-Code. Der Hash wird in [gulpfile.js](./src/app/gulpfile.js) (`inviteCodeMd5`) eingetragen, die Zahl in den [Github Secrets](https://github.com/jabenz/wedding-website/settings/secrets/actions) (`RSVP_INVITE_CODE`).
 
 # Komponenten
 

@@ -9,9 +9,11 @@ var replace = require('gulp-replace');
 // Define configuration for different environments
 var config = {
     development: {
+        inviteCodeMd5: 'e10adc3949ba59abbe56e057f20f883e', // Test Invite Code 123456
         functionApiUrl: 'http://localhost:7234/api'
     },
     production: {
+        inviteCodeMd5: 'd2c5d7b92192270fc10ea028eb2a38e8',
         functionApiUrl: 'https://laura-und.marvin-stue.de/api'
     }
 };
@@ -36,6 +38,7 @@ gulp.task('sass:watch', function () {
 gulp.task('minify-js', function () {
     return gulp.src('./js/scripts.js')
         .pipe(replace('__FUNCTION_API_URL__', envConfig.functionApiUrl))
+        .pipe(replace('__INVITE_CODE_MD5__', envConfig.inviteCodeMd5))
         .pipe(uglify())
         .pipe(rename({basename: 'scripts.min'}))
         .pipe(gulp.dest('./js'));
