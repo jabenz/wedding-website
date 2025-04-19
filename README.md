@@ -1,40 +1,80 @@
 # Wedding Website
-A beautiful, feature rich, device friendly wedding website.  
-_See [wedding.rampatra.com](http://wedding.rampatra.com/) for a demo. Use invite code `271117` to RSVP._
 
-# Highlights
-1. Slick and fully __responsive__ design.
-2. __RSVP feature__ which directly uploads data to a Google sheet.
-3. __Receive email alerts__ when someone RSVPs.
-4. __Add to Calendar__ feature which supports four different calendars.
-5. __Book Uber__ button lets guests book a cab to the venue with just a single tap.
-6. A nice __Youtube video__ showing your venue.
-7. __Google Map__ showing your venue's location.
-8. Start and run the website __completely free__. No hosting, backend server, or database required as you can use
-   [GitHub Pages](https://pages.github.com/) to host and Google sheets (with the help of Google scripts) to store RSVP
-   data.
+Laura und Marvins [Hochzeits-Website](https://laura-und.marvin-stue.de).
 
-# Getting Started
-1. `$ git clone https://github.com/rampatra/wedding-website.git` - clone this project to your computer
-2. `$ cd wedding-website` - go inside the project directory
-3. `$ npm install` - install dependencies
-4. `$ gulp` - compile sass to css, minify js, etc.
-5. That's it, open `index.html` file on your browser by just double-clicking on it.
+# Lokal testen
 
-# Documentation
-I have written a 
-[blog post describing all the features of this wedding website](https://blog.rampatra.com/wedding-website) and how to
-customize each of them according to your needs.
+## Voraussetzungen
 
-# About Me
-Hello, my name is Ram. I am a Director of Software Engineering at [Mastercard](https://www.mastercard.com/). I enjoy making teeny tiny applications in
-my leisure time and this is one of them. Now that my wedding is over, I am open-sourcing the project. Hope you like it!
+- [NodeJs](https://nodejs.org/en)
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [Azure Function Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=macos%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-csharp#install-the-azure-functions-core-tools)
 
-Lastly, if you use a Mac then you may also love [Presentify](https://presentifyapp.com/), [FaceScreen](https://facescreenapp.com/), or [ToDoBar](https://todobarapp.com/). Give them a whirl and let me know your thoughts.
+## Website
 
-# Contribute
-Firstly, a big thanks 🙏🏻 for the overwhelming response on [HackerNews](https://news.ycombinator.com/item?id=18556787), and [Reddit](https://www.reddit.com/r/opensource/comments/a1bx4h/i_am_open_sourcing_my_wedding_website_on_my_first/). If you would like to contribute to this project, you can do so by creating a [PR](https://help.github.com/articles/about-pull-requests/); and to support my work, you can click on one of the links under the "Sponsor this project" section or the button below.
+Die Website ist static HTML, ergänzt um SCSS / Javascript. Preprocessing und minifying erfolgen mit Gulp.
 
-<a href="https://www.buymeacoffee.com/rampatra" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+```bash
+cd src/app
+npm install
+npm run build
+```
 
-_P.S. For any queries or concerns, you can reach out to me on [Twitter](https://twitter.com/ram__patra). I'll try my best to help._
+Nachdem Gulp fertig ist, kann man einfach die [index.html](./src/app/index.html) aufrufen.
+In der lokalen Entwicklung muss man dran denken, dass CSS/JS Änderungen erst mit einem erneuten `npm run build` verfügbar sind.
+Außerdem kann Caching je nach Browser Änderungen blockieren. In so einem Fall Cache clearen oder einen Icognito-Mode nutzen.
+
+## Azure Functions
+
+Azure Functions werden für Funktionen wie RSVP genutzt. Sie können ebenfalls lokal getestet werden.
+
+```bash
+cd src/api
+func start
+```
+
+Nach erfolgreichem Build & Start können die Functions lokal aufgerufen werden, z.B. `curl -X POST http://localhost:7071/api/Rsvp`.
+Für lokale E2E-Tests muss man beachten, dass die API-URL in der [script.js](./src/app/js/scripts.js) (Line 221) auf die lokale URL angepasst werden muss.
+
+# Einrichtung
+
+1. Ressourcen aus [Komponente](#komponenten) wie beschrieben einrichten. Die Verlinkung von Static Web App und Function erfolgt automatisch.
+2. CNAME Record auf die Adresse der Static Web App setzen und in der App konfigurieren (*Custom domains*)
+3. Im [script.js](./src/app/js/scripts.js) (Line 221) die Function App URL setzen (*<https://laura-und.marvin-stue.de/api/Rsvp>*). Für lokale Tests `npm run build` nicht vergessen.
+4. Google Maps Javascript API API-Key erzeugen und in der [index.html](./src/app/index.html) (Line 501) eintragen.
+
+# Komponenten
+
+Die Anwendung besteht aus einer [Static Web App](./src/app/) und [Azure Functions](./src/api/) für Funktionen
+
+## Static Web App
+
+**Resource:** [Link](https://portal.azure.com/#@hamburger-software.de/resource/subscriptions/9a9dbdfd-8117-4af8-8973-1a6e111f5f46/resourceGroups/wed-web/providers/Microsoft.Web/staticSites/wed-web/staticsite)
+
+Die Azure Static Web App hostet die Website.
+
+### Konfiguration
+
+Nur Werte die vom Default abweichen:
+
+- SKU: Standard
+- Custom Domain (CNAME-style): laura-und.marvin-stue.de
+- Backend: Bring-Your-Own-Function-Model
+- Preview-Environments: Disabled
+
+Das Deployment erfolgt über eine [Github-Action](./.github/workflows/azure-static-web-apps.yml).
+Diese wurde mit Hilfe des [Azure Static Web Apps Toolkits](https://marketplace.visualstudio.com/items/?itemName=ms-azuretools.vscode-azurestaticwebapps) erzeugt.
+Im Workflow wurden nur die Pfade angepasst.
+
+## Function App
+
+Wir benutzen Azure Functions, um Backend-Funktionen wie die RSVP-Funktion abzubilden.
+
+### Konfiguration
+
+Nur Werte die vom Default abweichen:
+
+- SKU: Flex Consumption Linux
+- Model: .NET 8.0 - Isolated Worker
+- Application Insights: Enabled
+- Anonymous Access: Enabled
