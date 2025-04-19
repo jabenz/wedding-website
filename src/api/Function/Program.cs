@@ -25,6 +25,12 @@ builder.Services
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
+builder.Services
+    .AddOptions<RegistrationsOptions>()
+    .BindConfiguration(nameof(RegistrationsOptions))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
 builder.Services.AddScoped<ITableRepository, TableRepository>();
 
 builder.Build().Run();

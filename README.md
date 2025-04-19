@@ -37,7 +37,10 @@ Inhalt:
 
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "RsvpOptions:InviteCode": "123456" // Der wird so auch für dev in der website gesetzt
+    "RsvpOptions:InviteCode": "123456", // Der wird so auch für dev in der website gesetzt
+    "RegistrationsOptions:QueryCode": "123456",
+    "CosmosDbOptions:ConnectionString": "<anfragen>",
+    "CosmosDbOptions:TableName": "rsvps"
   }
 }
 ```
@@ -54,6 +57,12 @@ curl \
   -d "name=asd&email=asd@asd.de&extras=3&invite_code=123456" \
   -H "content-type: application/x-www-form-urlencoded"
 ```
+für die Erzeugung einer Einladung oder
+```bash
+curl \
+  -X GET "http://localhost:7234/api/Registrations?query_code=123456" \
+```
+für den Abruf aller Einladungen.
 
 Die API-URL ist in der script.js hinterlegt. Diese wird je nach Build `npm run build:dev` / `npm run build:azure` auf die passende URL geändert.
 
@@ -64,6 +73,7 @@ Die API-URL ist in der script.js hinterlegt. Diese wird je nach Build `npm run b
 3. Im [gulpfile.js](./src/app/gulpfile.js) die Function App URL für production setzen (*<https://laura-und.marvin-stue.de/api/Rsvp>*). Für lokale Tests `npm run build:dev` nicht vergessen.
 4. Google Maps Javascript API API-Key erzeugen und in der [index.html](./src/app/index.html) (Line 501) eintragen.
 5. Mit Hilfe eines MD5 Generators, z.B. [hier](https://www.md5hashgenerator.com/) einen MD5 Hash einer sechstelligen Zahl generieren. Dies ist der Invite-Code. Der Hash wird in [gulpfile.js](./src/app/gulpfile.js) (`inviteCodeMd5`) eingetragen, die Zahl in den [Github Secrets](https://github.com/jabenz/wedding-website/settings/secrets/actions) (`RSVP_INVITE_CODE`). Nach Update der Codes muss ein Deployment laufen damit der in der Function gesetzt ist (oder man ändert die env var dort per Hand).
+6. Einen Query Code festlegen und als [Github Secrets](https://github.com/jabenz/wedding-website/settings/secrets/actions) (`REGISTRATION_QUERY_CODE`) hinterlegen.
 
 # Komponenten
 
@@ -117,4 +127,4 @@ Nur Werte die vom Default abweichen:
 ### Table vorbereiten
 
 - In der Resource über den Data-Explorer eine neue Tabelle anlegen `rsvps`, 1000 RU/s.
-- In der Azure Functions Evironment Variables konfigurieren `CosmosDbOptions__ConnectionString = <Aus CosmosDb Resource kopieren>`, `CosmosDbOptions__TableName = rsvps`
+- In der Azure Function Evironment Variables konfigurieren: `CosmosDbOptions__ConnectionString = <Aus CosmosDb Resource kopieren>`, `CosmosDbOptions__TableName = rsvps`
