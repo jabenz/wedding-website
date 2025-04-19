@@ -1,6 +1,6 @@
 # Wedding Website
 
-Laura und Marvins [Hochzeits-Website](https://laura-und.marvin-stue.de).
+Lauras und Marvins [Hochzeits-Website](https://laura-und.marvin-stue.de).
 
 # Lokal testen
 
@@ -29,7 +29,7 @@ Außerdem kann Caching je nach Browser Änderungen blockieren. In so einem Fall 
 Azure Functions werden für Funktionen wie RSVP genutzt. Sie können ebenfalls lokal getestet werden.
 
 ```bash
-cd src/api
+cd src/api/Function
 func start
 ```
 
@@ -40,7 +40,7 @@ Die API-URL wird im lokalen Build-Prozess `npm run build:dev` auf diese URL geä
 
 1. Ressourcen aus [Komponente](#komponenten) wie beschrieben einrichten. Die Verlinkung von Static Web App und Function erfolgt automatisch.
 2. CNAME Record auf die Adresse der Static Web App setzen und in der App konfigurieren (*Custom domains*)
-3. Im [script.js](./src/app/js/scripts.js) (Line 221) die Function App URL setzen (*<https://laura-und.marvin-stue.de/api/Rsvp>*). Für lokale Tests `npm run build` nicht vergessen.
+3. Im [gulpfile.js](./src/app/gulpfile.js) die Function App URL für production setzen (*<https://laura-und.marvin-stue.de/api/Rsvp>*). Für lokale Tests `npm run build:dev` nicht vergessen.
 4. Google Maps Javascript API API-Key erzeugen und in der [index.html](./src/app/index.html) (Line 501) eintragen.
 
 # Komponenten
