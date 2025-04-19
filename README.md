@@ -109,3 +109,4 @@ Nur Werte die vom Default abweichen:
 ### Table vorbereiten
 
 - In der Resource über den Data-Explorer eine neue Tabelle anlegen `rsvps`, 1000 RU/s.
+- In der Azure Functions Evironment Variables konfigurieren `CosmosDbOptions__ConnectionString = <Aus CosmosDb Resource kopieren>`, `CosmosDbOptions__TableName = rsvps`

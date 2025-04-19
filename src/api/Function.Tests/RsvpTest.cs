@@ -1,6 +1,8 @@
 ﻿using api;
 using api.Configuration;
+using api.Entities;
 using api.Helper;
+using api.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -13,28 +15,34 @@ namespace Function.Tests;
 
 public class RsvpTest
 {
+    private const string Name = "John Doe";
+    private const string Email = "john@doe.de";
+    private const int Extras = 2;
+    private const string InviteCode = "123456";
+
     private readonly ILogger<Rsvp> _logger = Mock.Of<ILogger<Rsvp>>();
+    private readonly ITableRepository _tableRepository = Mock.Of<ITableRepository>();
     private readonly Rsvp _function;
     private readonly IOptions<RsvpOptions> _options = Options.Create(new RsvpOptions()
     {
-        InviteCode = "123456"
+        InviteCode = InviteCode
     });
 
     public RsvpTest()
     {
-        _function = new Rsvp(_logger, _options);
+        _function = new Rsvp(_logger, _options, _tableRepository);
     }
 
     [Fact]
-    public void ItAcceptsPostRequests()
+    public async Task ItAcceptsPostRequests()
     {
         // Arrange
         var request = new DefaultHttpContext().Request;
         request.Method = "POST";
-        request.Form = request.Form = CreateFormCollection(_options.Value.InviteCode, "John Doe", "john@doe.de", 2);
+        request.Form = request.Form = CreateFormCollection(InviteCode, Name, Email, Extras);
 
         // Act
-        var result = _function.Run(request);
+        var result = await _function.RunAsync(request);
 
         // Assert
         result.ShouldBeOfType<OkObjectResult>();
@@ -49,14 +57,14 @@ public class RsvpTest
     [InlineData("HEAD")]
     [InlineData("TRACE")]
     [InlineData("CONNECT")]
-    public void ItRejectsUnsupportedMethods(string method)
+    public async Task ItRejectsUnsupportedMethods(string method)
     {
         // Arrange
         var request = new DefaultHttpContext().Request;
         request.Method = method;
 
         // Act
-        var result = _function.Run(request);
+        var result = await _function.RunAsync(request);
 
         // Assert
         result.ShouldBeOfType<StatusCodeResult>()
@@ -64,7 +72,7 @@ public class RsvpTest
     }
 
     [Fact]
-    public void ItRejectsOnWrongContentType()
+    public async Task ItRejectsOnWrongContentType()
     {
         // Arrange
         var request = new DefaultHttpContext().Request;
@@ -72,7 +80,7 @@ public class RsvpTest
         request.ContentType = "application/json";
 
         // Act
-        var result = _function.Run(request);
+        var result = await _function.RunAsync(request);
 
         // Assert
         result.ShouldBeOfType<StatusCodeResult>()
@@ -80,33 +88,79 @@ public class RsvpTest
     }
 
     [Fact]
-    public void ItChecksForValidInviteCode()
+    public async Task ItChecksForValidInviteCode()
     {
         // Arrange
         var request = new DefaultHttpContext().Request;
         request.Method = "POST";
-        request.Form = CreateFormCollection(_options.Value.InviteCode, "John Doe", "john@doe.de", 2);
+        request.Form = CreateFormCollection(_options.Value.InviteCode, Name, Email, Extras);
 
         // Act
-        var result = _function.Run(request);
+        var result = await _function.RunAsync(request);
 
         // Assert
         result.ShouldBeOfType<OkObjectResult>();
     }
 
     [Fact]
-    public void ItRejectsOnInvalidInviteCode()
+    public async Task ItRejectsOnInvalidInviteCode()
     {
         // Arrange
         var request = new DefaultHttpContext().Request;
         request.Method = "POST";
-        request.Form = request.Form = CreateFormCollection("654321", "John Doe", "john@doe.de", 2);
+        request.Form = request.Form = CreateFormCollection("654321", Name, Email, Extras);
 
         // Act
-        var result = _function.Run(request);
+        var result = await _function.RunAsync(request);
 
         // Assert
         result.ShouldBeOfType<ForbidResult>();
+    }
+
+    [Fact]
+    public async Task ItHandlesDatabaseErrorsGracefuly()
+    {
+        // Arrange
+        var request = new DefaultHttpContext().Request;
+        request.Method = "POST";
+        request.Form = request.Form = CreateFormCollection(InviteCode, Name, Email, Extras);
+
+        Mock.Get(_tableRepository)
+            .Setup(repo => repo.CreateAsync(It.IsAny<RsvpEntity>()))
+            .ThrowsAsync(new Exception("Database error"));
+
+        // Act
+        var result = await _function.RunAsync(request);
+
+        // Assert
+        result.ShouldBeOfType<StatusCodeResult>()
+            .StatusCode.ShouldBe(StatusCodes.Status500InternalServerError);
+    }
+
+    [Fact]
+    public async Task ItSavesRsvpToDatabase()
+    {
+        // Arrange
+        var request = new DefaultHttpContext().Request;
+        request.Method = "POST";
+        request.Form = request.Form = CreateFormCollection(InviteCode, Name, Email, Extras);
+
+        RsvpEntity? rsvpEntityContainer = null!;
+        Mock.Get(_tableRepository)
+            .Setup(repo => repo.CreateAsync(It.IsAny<RsvpEntity>()))
+            .Callback<RsvpEntity>(entity => rsvpEntityContainer = entity);
+
+        // Act
+        var result = await _function.RunAsync(request);
+
+        // Assert
+        result.ShouldBeOfType<OkObjectResult>();
+        Mock.Get(_tableRepository)
+            .Verify(repo => repo.CreateAsync(It.IsAny<RsvpEntity>()), Times.Once);
+        rsvpEntityContainer.ShouldNotBeNull();
+        rsvpEntityContainer.Name.ShouldBe(Name);
+        rsvpEntityContainer.Email.ShouldBe(Email);
+        rsvpEntityContainer.Extras.ShouldBe(Extras);
     }
 
     private static FormCollection CreateFormCollection(string inviteCode, string name, string email, int extras)

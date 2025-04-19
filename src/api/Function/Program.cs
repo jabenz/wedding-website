@@ -1,4 +1,5 @@
 using api.Configuration;
+using api.Repositories;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,5 +14,8 @@ builder.Services
     .ConfigureFunctionsApplicationInsights();
 
 builder.Services.AddOptions<RsvpOptions>().BindConfiguration("RsvpOptions");
+builder.Services.AddOptions<CosmosDbOptions>().BindConfiguration("CosmosDbOptions");
+
+builder.Services.AddScoped<ITableRepository, TableRepository>();
 
 builder.Build().Run();

@@ -6,17 +6,19 @@ using Microsoft.Extensions.Options;
 using api.Configuration;
 using api.Extensions;
 using api.Models;
+using api.Repositories;
+using api.Entities;
 
 namespace api;
 
-public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options)
+public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRepository tableRepository)
 {
     private readonly ILogger<Rsvp> _logger = logger;
 
     [Function("Rsvp")]
-    public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
+    public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
     {
-        if(options.Value.InviteCode == null)
+        if (options.Value.InviteCode == null)
         {
             _logger.LogError("Invite code is not set in configuration");
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
@@ -29,7 +31,7 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options)
             return new StatusCodeResult(StatusCodes.Status405MethodNotAllowed);
         }
 
-        if(!req.HasFormContentType)
+        if (!req.HasFormContentType)
         {
             _logger.LogWarning("Request content type {ContentType} not allowed", req.ContentType);
             return new StatusCodeResult(StatusCodes.Status415UnsupportedMediaType);
@@ -54,6 +56,25 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options)
 
         _logger.LogInformation("Valid rsvp request");
 
+        var rsvpEntity = new RsvpEntity
+        {
+            Name = rsvpRequest.Name,
+            Email = rsvpRequest.Email,
+            Extras = rsvpRequest.Extras
+        };
+
+        try
+        {
+            _logger.LogInformation("Saving RSVP to database: {RsvpEntity}", rsvpEntity);
+            await tableRepository.CreateAsync(rsvpEntity);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error saving RSVP to database");
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+
+        _logger.LogInformation("RSVP saved successfully");
         return new OkObjectResult("Invite accepted");
     }
 }
