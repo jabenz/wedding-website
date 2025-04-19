@@ -14,6 +14,7 @@ on:
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/api/Function' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_TEST_PATH: 'src/api/Function.Tests' # set this to the path to your web app test project, defaults to the repository root
   DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
 
 jobs:
@@ -37,6 +38,13 @@ jobs:
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           dotnet build --configuration Release --output ./output
+          popd
+
+      - name: 'Run Unit Tests'
+        shell: bash
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_TEST_PATH }}'
+          dotnet test --configuration Release --no-build --verbosity normal
           popd
       
       - name: Login to Azure
