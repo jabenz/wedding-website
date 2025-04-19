@@ -4,6 +4,20 @@ var gulp = require('gulp');
 var sass = require('gulp-sass')(require('sass'));
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
+var replace = require('gulp-replace');
+
+// Define configuration for different environments
+var config = {
+    development: {
+        functionApiUrl: 'http://localhost:7071/api'
+    },
+    production: {
+        functionApiUrl: 'https://laura-und.marvin-stue.de/api'
+    }
+};
+
+var env = process.env.NODE_ENV || 'development';
+var envConfig = config[env];
 
 // compile scss to css
 gulp.task('sass', function () {
@@ -21,6 +35,7 @@ gulp.task('sass:watch', function () {
 // minify js
 gulp.task('minify-js', function () {
     return gulp.src('./js/scripts.js')
+        .pipe(replace('__FUNCTION_API_URL__', envConfig.functionApiUrl))
         .pipe(uglify())
         .pipe(rename({basename: 'scripts.min'}))
         .pipe(gulp.dest('./js'));

@@ -208,6 +208,7 @@ $(document).ready(function () {
 
 
     /********************** RSVP **********************/
+
     $('#rsvp-form').on('submit', function (e) {
         e.preventDefault();
         var data = $(this).serialize();
@@ -218,7 +219,7 @@ $(document).ready(function () {
             && MD5($('#invite_code').val()) !== '2ac7f43695eb0479d5846bb38eec59cc') {
             $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Your invite code is incorrect.'));
         } else {
-            $.post('https://laura-und.marvin-stue.de/api/Rsvp', data)
+            $.post('__FUNCTION_API_URL__/Rsvp', data)
                 .done(function (data) {
                     console.log(data);
                     if (data.result === "error") {

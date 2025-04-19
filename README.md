@@ -17,11 +17,11 @@ Die Website ist static HTML, ergänzt um SCSS / Javascript. Preprocessing und mi
 ```bash
 cd src/app
 npm install
-npm run build
+npm run build:dev
 ```
 
 Nachdem Gulp fertig ist, kann man einfach die [index.html](./src/app/index.html) aufrufen.
-In der lokalen Entwicklung muss man dran denken, dass CSS/JS Änderungen erst mit einem erneuten `npm run build` verfügbar sind.
+In der lokalen Entwicklung muss man dran denken, dass CSS/JS Änderungen erst mit einem erneuten `npm run build:dev` verfügbar sind.
 Außerdem kann Caching je nach Browser Änderungen blockieren. In so einem Fall Cache clearen oder einen Icognito-Mode nutzen.
 
 ## Azure Functions
@@ -34,7 +34,7 @@ func start
 ```
 
 Nach erfolgreichem Build & Start können die Functions lokal aufgerufen werden, z.B. `curl -X POST http://localhost:7071/api/Rsvp`.
-Für lokale E2E-Tests muss man beachten, dass die API-URL in der [script.js](./src/app/js/scripts.js) (Line 221) auf die lokale URL angepasst werden muss.
+Die API-URL wird im lokalen Build-Prozess `npm run build:dev` auf diese URL geändert.
 
 # Einrichtung
 
