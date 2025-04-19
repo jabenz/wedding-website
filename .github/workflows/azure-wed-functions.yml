@@ -7,6 +7,9 @@ on:
   push:
     branches:
       - master
+    paths:
+      - "src/api/**"
+      - ".github/workflows/azure-wed-functions.yml"
   workflow_dispatch:
 
 env:
