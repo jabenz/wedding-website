@@ -6,11 +6,12 @@ name: Function Deployment - wed-funcs
 on:
   push:
     branches:
-      - master
+    - master
     paths:
-      - "src/api/**"
-      - ".github/workflows/azure-wed-functions.yml"
+    - "src/api/**"
+    - ".github/workflows/azure-wed-functions.yml"
   workflow_dispatch:
+
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'src/api/Function' # set this to the path to your web app project, defaults to the repository root
@@ -25,51 +26,54 @@ jobs:
       contents: read #This is required for actions/checkout
 
     steps:
-      - name: 'Checkout GitHub Action'
-        uses: actions/checkout@v4
+    - name: 'Checkout GitHub Action'
+      uses: actions/checkout@v4
 
-      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+    - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: 'Resolve Project Dependencies Using Dotnet'
-        shell: bash
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          dotnet build --configuration Release --output ./output
-          popd
+    - name: 'Resolve Project Dependencies Using Dotnet'
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        dotnet build --configuration Release --output ./output
+        popd
 
-      - name: 'Run Unit Tests'
-        shell: bash
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_TEST_PATH }}'
-          dotnet build --configuration Release
-          dotnet test --configuration Release --no-build
-          popd
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_59D8A575BB964A36B4FB28D037ED8058 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_15AEA08C550444D88E75D755967BF4CC }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1030960201D44D97B8197447E360E024 }}
+    - name: 'Run Unit Tests'
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_TEST_PATH }}'
+        dotnet build --configuration Release
+        dotnet test --configuration Release --no-build
+        popd
 
-      # Add this step to set the app settings before deploying
-      - name: 'Set Azure Function App Settings'
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az functionapp config appsettings set \
-              --name wed-funcs \
-              --resource-group wed-web \
-              --settings "RsvpOptions__InviteCode=${{ secrets.RSVP_INVITE_CODE }}" "RegistrationsOptions__QueryCode=${{ secrets.REGISTRATION_QUERY_CODE }}"
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_59D8A575BB964A36B4FB28D037ED8058 }}
+        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_15AEA08C550444D88E75D755967BF4CC }}
+        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1030960201D44D97B8197447E360E024 }}
 
-      - name: 'Run Azure Functions Action'
-        uses: Azure/functions-action@v1
-        id: fa
-        with:
-          app-name: 'wed-funcs'
-          slot-name: 'Production'
-          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-          
+    # Add this step to set the app settings before deploying
+    - name: 'Set Azure Function App Settings'
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az functionapp config appsettings set \
+            --name wed-funcs \
+            --resource-group wed-web \
+            --settings
+              "RsvpOptions__InviteCode=${{ secrets.RSVP_INVITE_CODE }}" \
+              "RegistrationsOptions__QueryCode=${{ secrets.REGISTRATION_QUERY_CODE }}" \
+              "CosmosDbOptions__ConnectionString=${{ secrets.COSMOSDB_CONNECTION_STRING }}" \
+              "CosmosDbOptions__TableName=${{ secrets.COSMOSDB_TABLE_NAME }}" \
+
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: 'wed-funcs'
+        slot-name: 'Production'
+        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'

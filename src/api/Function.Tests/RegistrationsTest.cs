@@ -127,7 +127,7 @@ public class RegistrationsTest
         // Act
         var result = await _function.RunAsync(request);
         var okResult = result.ShouldBeOfType<OkObjectResult>();
-        var registrations = okResult.Value.ShouldBeAssignableTo<IEnumerable<Registration>>();
+        var registrations = okResult.Value.ShouldBeAssignableTo<IEnumerable<RegistrationResponse>>();
         registrations.ShouldNotBeNull();
         registrations.ShouldNotBeEmpty();
         registrations.Count().ShouldBe(2);

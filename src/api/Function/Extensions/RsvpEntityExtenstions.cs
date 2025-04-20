@@ -5,7 +5,7 @@ namespace api.Extensions;
 
 public static class RsvpEntityExtenstions
 {
-    public static Registration ToRegistration(this RsvpEntity form)
+    public static RegistrationResponse ToResponse(this RegistrationEntity form)
         => new()
         {
             Name = form.Name,

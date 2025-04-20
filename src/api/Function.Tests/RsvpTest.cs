@@ -1,6 +1,7 @@
 ﻿using api;
 using api.Configuration;
 using api.Entities;
+using api.Exceptions;
 using api.Helper;
 using api.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -127,7 +128,7 @@ public class RsvpTest
         request.Form = request.Form = CreateFormCollection(InviteCode, Name, Email, Extras);
 
         Mock.Get(_tableRepository)
-            .Setup(repo => repo.CreateAsync(It.IsAny<RsvpEntity>()))
+            .Setup(repo => repo.CreateAsync(It.IsAny<RegistrationEntity>()))
             .ThrowsAsync(new Exception("Database error"));
 
         // Act
@@ -146,10 +147,10 @@ public class RsvpTest
         request.Method = "POST";
         request.Form = request.Form = CreateFormCollection(InviteCode, Name, Email, Extras);
 
-        RsvpEntity? rsvpEntityContainer = null!;
+        RegistrationEntity? rsvpEntityContainer = null!;
         Mock.Get(_tableRepository)
-            .Setup(repo => repo.CreateAsync(It.IsAny<RsvpEntity>()))
-            .Callback<RsvpEntity>(entity => rsvpEntityContainer = entity);
+            .Setup(repo => repo.CreateAsync(It.IsAny<RegistrationEntity>()))
+            .Callback<RegistrationEntity>(entity => rsvpEntityContainer = entity);
 
         // Act
         var result = await _function.RunAsync(request);
@@ -157,11 +158,30 @@ public class RsvpTest
         // Assert
         result.ShouldBeOfType<OkObjectResult>();
         Mock.Get(_tableRepository)
-            .Verify(repo => repo.CreateAsync(It.IsAny<RsvpEntity>()), Times.Once);
+            .Verify(repo => repo.CreateAsync(It.IsAny<RegistrationEntity>()), Times.Once);
         rsvpEntityContainer.ShouldNotBeNull();
         rsvpEntityContainer.Name.ShouldBe(Name);
         rsvpEntityContainer.Email.ShouldBe(Email);
         rsvpEntityContainer.Extras.ShouldBe(Extras);
+    }
+
+    [Fact]
+    public async Task ItHandlesExistingRsvpGracefully()
+    {
+        // Arrange
+        var request = new DefaultHttpContext().Request;
+        request.Method = "POST";
+        request.Form = request.Form = CreateFormCollection(InviteCode, Name, Email, Extras);
+
+        Mock.Get(_tableRepository)
+            .Setup(repo => repo.CreateAsync(It.IsAny<RegistrationEntity>()))
+            .ThrowsAsync(new RegistrationAlreadyExistsException(Email));
+
+        // Act
+        var result = await _function.RunAsync(request);
+
+        // Assert
+        result.ShouldBeOfType<ConflictObjectResult>();
     }
 
     private static FormCollection CreateFormCollection(string inviteCode, string name, string email, int extras)

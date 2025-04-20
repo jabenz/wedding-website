@@ -40,7 +40,7 @@ public class Registrations(ILogger<Registrations> logger, IOptions<Registrations
             logger.LogInformation("Querying registrations from database");
             var registrations = await tableRepository.GetAllAsync();
 
-            return new OkObjectResult(registrations.Select(r => r.ToRegistration()).ToList());
+            return new OkObjectResult(registrations.Select(r => r.ToResponse()).ToList());
         }
         catch (Exception ex)
         {

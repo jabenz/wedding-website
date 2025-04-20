@@ -4,13 +4,14 @@ using Azure.Data.Tables;
 
 namespace api.Entities;
 
-public class RsvpEntity : ITableEntity
+public class RegistrationEntity : ITableEntity
 {
     // Technical values
-    public string RowKey { get; set; } = Guid.NewGuid().ToString();
+    public string PartitionKey { get; set; } = "Rsvp";
+    // We use the email as the RowKey, so we can use it to query the entity and provide uniqueness of entities based on email
+    public string RowKey { get => Email; set => Email = value; }
     public DateTimeOffset? Timestamp { get; set; } = DateTimeOffset.UtcNow;
     public ETag ETag { get; set; }
-    public string PartitionKey { get; set; } = "Rsvp";
 
     // Domain values
     public required string Name { get; set; }

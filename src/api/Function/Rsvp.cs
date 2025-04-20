@@ -8,6 +8,7 @@ using api.Extensions;
 using api.Models;
 using api.Repositories;
 using api.Entities;
+using api.Exceptions;
 
 namespace api;
 
@@ -56,7 +57,7 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
 
         _logger.LogInformation("Valid rsvp request");
 
-        var rsvpEntity = new RsvpEntity
+        var rsvpEntity = new RegistrationEntity
         {
             Name = rsvpRequest.Name,
             Email = rsvpRequest.Email,
@@ -67,6 +68,11 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
         {
             _logger.LogInformation("Saving RSVP to database: {RsvpEntity}", rsvpEntity);
             await tableRepository.CreateAsync(rsvpEntity);
+        }
+        catch (RegistrationAlreadyExistsException ex)
+        {
+            _logger.LogWarning(ex, "RSVP already exists for email {Email}", rsvpEntity.Email);
+            return new ConflictObjectResult("RSVP already exists for this email");
         }
         catch (Exception ex)
         {
