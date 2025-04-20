@@ -68,7 +68,7 @@ jobs:
               "RsvpOptions__InviteCode=${{ secrets.RSVP_INVITE_CODE }}" \
               "RegistrationsOptions__QueryCode=${{ secrets.REGISTRATION_QUERY_CODE }}" \
               "CosmosDbOptions__ConnectionString=${{ secrets.COSMOSDB_CONNECTION_STRING }}" \
-              "CosmosDbOptions__TableName=${{ secrets.COSMOSDB_TABLE_NAME }}" \
+              "CosmosDbOptions__TableName=${{ secrets.COSMOSDB_TABLE_NAME }}"
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
