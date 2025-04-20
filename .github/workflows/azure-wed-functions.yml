@@ -64,7 +64,7 @@ jobs:
           az functionapp config appsettings set \
             --name wed-funcs \
             --resource-group wed-web \
-            --settings
+            --settings \
               "RsvpOptions__InviteCode=${{ secrets.RSVP_INVITE_CODE }}" \
               "RegistrationsOptions__QueryCode=${{ secrets.REGISTRATION_QUERY_CODE }}" \
               "CosmosDbOptions__ConnectionString=${{ secrets.COSMOSDB_CONNECTION_STRING }}" \
