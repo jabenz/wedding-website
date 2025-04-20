@@ -71,8 +71,8 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
         }
         catch (RegistrationAlreadyExistsException ex)
         {
-            _logger.LogWarning(ex, "RSVP already exists for email {Email}", rsvpEntity.Email);
-            return new ConflictObjectResult("RSVP already exists for this email");
+            _logger.LogWarning(ex, "Registration already exists for email {Email}", rsvpEntity.Email);
+            return new ConflictObjectResult("Registration already exists for this email");
         }
         catch (Exception ex)
         {

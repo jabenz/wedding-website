@@ -213,10 +213,10 @@ $(document).ready(function () {
         e.preventDefault();
         var data = $(this).serialize();
 
-        $('#alert-wrapper').html(alert_markup('info', '<strong>Just a sec!</strong> We are saving your details.'));
+        $('#alert-wrapper').html(alert_markup('info', '<strong>Eine Sekunde!</strong>Wir speichern die Anmeldung.'));
 
         if (MD5($('#invite_code').val()) !== '__INVITE_CODE_MD5__') {
-            $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Your invite code is incorrect.'));
+            $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Der Einladungscode ist falsch.'));
         } else {
             $.post('__FUNCTION_API_URL__/Rsvp', data)
                 .done(function (data) {
@@ -230,7 +230,14 @@ $(document).ready(function () {
                 })
                 .fail(function (data) {
                     console.log(data);
-                    $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> There is some issue with the server. '));
+
+                    if(data.status === 409) {
+                        $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Du hast dich bereits angemeldet\'d. Melde dich bei uns, wenn du Daten ändern möchtest.'));
+                    }
+                    else {
+                        $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Es gibt Probleme mit der Anmeldung. Melde dich am besten bei uns.'));
+                    }
+
                 });
         }
     });
