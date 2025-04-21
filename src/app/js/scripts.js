@@ -232,7 +232,7 @@ $(document).ready(function () {
                     console.log(data);
 
                     if(data.status === 409) {
-                        $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Du hast dich bereits angemeldet\'d. Melde dich bei uns, wenn du Daten ändern möchtest.'));
+                        $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Du hast dich bereits angemeldet. Melde dich bei uns, wenn du Daten ändern möchtest.'));
                     }
                     else {
                         $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Es gibt Probleme mit der Anmeldung. Melde dich am besten bei uns.'));
