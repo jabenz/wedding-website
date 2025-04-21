@@ -9,6 +9,7 @@ using api.Models;
 using api.Repositories;
 using api.Entities;
 using api.Exceptions;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace api;
 
@@ -19,6 +20,8 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
     [Function("Rsvp")]
     public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
     {
+        _logger.LogInformation("RSVP function triggered (URI: {Uri})", req.GetDisplayUrl());
+
         if (options.Value.InviteCode == null)
         {
             _logger.LogError("Invite code is not set in configuration");
@@ -42,7 +45,8 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
         try
         {
             rsvpRequest = req.Form.GetRsvpRequest();
-            _logger.LogInformation("Received RSVP request: {RsvpRequest}", rsvpRequest);
+            _logger.LogInformation("Received RSVP request, Name: {Name}, Email: {Email}, Extras: {Extras}",
+                rsvpRequest.Name, rsvpRequest.Email, rsvpRequest.Extras);
         }
         catch (Exception ex)
         {
