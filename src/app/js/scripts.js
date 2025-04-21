@@ -231,7 +231,7 @@ $(document).ready(function () {
                 .fail(function (data) {
                     console.log(data);
 
-                    if(data.status === 409) {
+                    if (data.status === 409) {
                         $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Du hast dich bereits angemeldet. Melde dich bei uns, wenn du Daten ändern möchtest.'));
                     }
                     else {
@@ -247,21 +247,20 @@ $(document).ready(function () {
 /********************** Extras **********************/
 
 // Google map
-function initMap() {
+async function initMap() {
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
     var map = new google.maps.Map(document.getElementById('map-canvas'), {
         zoom: 15,
-        center: location,
+        center: homeLocation,
         scrollwheel: false
     });
-    
-    var location = {lat: 52.574871898933154, lng: 9.719410040320284};
-    var hotelMarker = new google.maps.Marker({
-        position: location,
+
+    var homeLocation = { lat: 52.574871898933154, lng: 9.719410040320284 };
+    var hotelMarker = new AdvancedMarkerElement({
+        position: homeLocation,
         map: map,
-        title: 'Beans Restaurant',
-        icon: {
-            url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
-        }
+        title: 'Beans Restaurant'
     });
 }
 

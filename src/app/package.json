@@ -19,7 +19,7 @@
     "gulp-rename": "^1.4.0",
     "gulp-replace": "^1.1.4",
     "gulp-sass": "^5.0.0",
-    "gulp-uglify": "^3.0.2",
+    "gulp-uglifyes": "^0.2.1",
     "sass": "^1.25.0"
   },
   "dependencies": {
