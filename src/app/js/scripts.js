@@ -248,30 +248,30 @@ $(document).ready(function () {
 
 // Google map
 function initMap() {
-    var location = {lat: 52.574871898933154, lng: 9.719410040320284};
     var map = new google.maps.Map(document.getElementById('map-canvas'), {
         zoom: 15,
-        center: location,
+        center: hotelLocation,
         scrollwheel: false
     });
-
-    var marker = new google.maps.Marker({
-        position: location,
-        map: map
-    });
-}
-
-function initBBSRMap() {
-    var la_fiesta = {lat: 52.574871898933154, lng: 9.719410040320284};
-    var map = new google.maps.Map(document.getElementById('map-canvas'), {
-        zoom: 15,
-        center: la_fiesta,
-        scrollwheel: false
+    
+    var hotelLocation = {lat: 52.574871898933154, lng: 9.719410040320284};
+    var hotelMarker = new google.maps.Marker({
+        position: hotelLocation,
+        map: map,
+        title: 'Beans Restaurant',
+        icon: {
+            url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+        }
     });
 
-    var marker = new google.maps.Marker({
-        position: la_fiesta,
-        map: map
+    var homeLocation = {lat: 52.34596687607046, lng: 9.713327656534833};
+    var homeMarkerTest = new google.maps.Marker({
+        position: homeLocation,
+        map: map,
+        title: 'Home',
+        icon: {
+            url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png'
+        }
     });
 }
 
