@@ -247,9 +247,6 @@ $(document).ready(function () {
 /********************** Extras **********************/
 
 // Google map
-
-const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-
 function initMap() {
     var map = new google.maps.Map(document.getElementById('map-canvas'), {
         zoom: 15,
