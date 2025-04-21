@@ -32,8 +32,6 @@
       const link = document.createElement('link');
       if (css === 'animate.css') {
         link.href = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css';
-      } else if (css === 'font-awesome.css') {
-        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
       }
       link.rel = 'stylesheet';
 
@@ -46,7 +44,7 @@
       if (js === 'waypoints.js') {
         document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.js"><\/script>');
       } else if (js === 'jquery.js') {
-        document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"><\/script>');
+        document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"><\/script>');
       }
     }
   </script>
@@ -58,8 +56,7 @@
   <link rel="stylesheet" href="css/styles.min.css">
   <link rel="stylesheet" href="css/queries.css">
   <link rel="stylesheet" href="node_modules/animate.css/animate.min.css" onerror="loadCssFromCDN('animate.css')">
-  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css"
-    onerror="loadCssFromCDN('font-awesome.css')">
+  <script src="https://kit.fontawesome.com/7778f08d61.js" crossorigin="anonymous"></script>
   <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 </head>
 
@@ -519,7 +516,7 @@
   <script src="js/vendor/ouical.js"></script>
   <script src="js/scripts.min.js"></script>
   <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhIW43clmNLTcU8AQ7F_R299jjBUihloY&callback=initMap"></script>
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhIW43clmNLTcU8AQ7F_R299jjBUihloY&callback=initMap&v=weekly&libraries=marker,places"></script>
 </body>
 
 </html>

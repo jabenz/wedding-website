@@ -247,21 +247,47 @@ $(document).ready(function () {
 /********************** Extras **********************/
 
 // Google map
-function initMap() {
+async function initMap() {
+    const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+
+    const markers = [
+        {
+            position: { lat: 52.574871898933154, lng: 9.719410040320284 },
+            title: 'Beans Restaurant',
+            icon: 'fa-utensils',
+        },
+        {
+            position: { lat: 52.34596687607046, lng: 9.713327656534833 },
+            title: 'Home',
+            icon: 'fa-house',
+        }
+    ];
+
+    var baseLocation = { lat: 52.574871898933154, lng: 9.719410040320284 };
     var map = new google.maps.Map(document.getElementById('map-canvas'), {
         zoom: 15,
-        center: hotelLocation,
-        scrollwheel: false
+        center: baseLocation,
+        scrollwheel: false,
+        mapId: "a7db4426599686f6",
     });
 
-    var hotelLocation = { lat: 52.574871898933154, lng: 9.719410040320284 };
-    var hotelMarker = new google.maps.Marker({
-        position: hotelLocation,
-        map: map,
-        title: 'Beans Restaurant',
-        icon: {
-            url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
-        }
+
+    markers.forEach(markerConfig => {
+        const iconElement = document.createElement("div");
+        iconElement.innerHTML = `<i class="fa ${markerConfig.icon}"></i>`;
+
+        const pin = new PinElement({
+            scale: 1,
+            glyph: iconElement,
+            glyphColor: "white",
+        });
+
+        new AdvancedMarkerElement({
+            position: markerConfig.position,
+            map: map,
+            title: markerConfig.title,
+            content: pin.element,
+        });
     });
 }
 
