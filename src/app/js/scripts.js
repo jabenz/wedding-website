@@ -246,6 +246,9 @@ $(document).ready(function () {
 
 /********************** Extras **********************/
 
+let map;
+let storedMarkers = [];
+
 // Google map
 async function initMap() {
     const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
@@ -264,7 +267,7 @@ async function initMap() {
     ];
 
     var baseLocation = { lat: 52.574871898933154, lng: 9.719410040320284 };
-    var map = new google.maps.Map(document.getElementById('map-canvas'), {
+    map = new google.maps.Map(document.getElementById('map-canvas'), {
         zoom: 15,
         center: baseLocation,
         scrollwheel: false,
@@ -282,13 +285,21 @@ async function initMap() {
             glyphColor: "white",
         });
 
-        new AdvancedMarkerElement({
+        const marker = new AdvancedMarkerElement({
             position: markerConfig.position,
             map: map,
             title: markerConfig.title,
             content: pin.element,
         });
+
+        storedMarkers.push(marker);
     });
+}
+
+function mapGoToMarker(index) {
+    const marker = storedMarkers[index];
+    map.panTo(marker.position);
+    map.setZoom(15);
 }
 
 // alert_markup
