@@ -247,20 +247,21 @@ $(document).ready(function () {
 /********************** Extras **********************/
 
 // Google map
-async function initMap() {
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
-
+function initMap() {
     var map = new google.maps.Map(document.getElementById('map-canvas'), {
         zoom: 15,
-        center: homeLocation,
+        center: hotelLocation,
         scrollwheel: false
     });
 
-    var homeLocation = { lat: 52.574871898933154, lng: 9.719410040320284 };
-    var hotelMarker = new AdvancedMarkerElement({
-        position: homeLocation,
+    var hotelLocation = { lat: 52.574871898933154, lng: 9.719410040320284 };
+    var hotelMarker = new google.maps.Marker({
+        position: hotelLocation,
         map: map,
-        title: 'Beans Restaurant'
+        title: 'Beans Restaurant',
+        icon: {
+            url: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+        }
     });
 }
 
