@@ -260,9 +260,24 @@ async function initMap() {
             icon: 'fa-utensils',
         },
         {
-            position: { lat: 52.34596687607046, lng: 9.713327656534833 },
-            title: 'Home',
-            icon: 'fa-house',
+            position: { lat: 52.60793216818634, lng: 9.689291614949479 },
+            title: 'Hotel Ballands',
+            icon: 'fa-hotel',
+        },
+        {
+            position: { lat: 52.549745830694036, lng: 9.746664811751025 },
+            title: 'Pension Genat',
+            icon: 'fa-hotel',
+        },
+        {
+            position: { lat: 52.544730590968705, lng: 9.725521454206698 },
+            title: 'Pension Beermann',
+            icon: 'fa-hotel',
+        },
+        {
+            position: { lat: 52.37127997346491, lng: 9.736146320769006 },
+            title: 'Standesamt Hannover (Altes Rathaus)',
+            icon: 'fa-ring',
         }
     ];
 
