@@ -248,48 +248,59 @@ $(document).ready(function () {
 
 let map;
 let storedMarkers = [];
+let infoWindow;
 
 // Google map
+const markers = [
+    {
+        position: { lat: 52.574871898933154, lng: 9.719410040320284 },
+        title: 'Beans Restaurant',
+        category: 'Restaurant',
+        address: 'Kaffeedamm 2, 30900 Wedemark',
+        icon: 'fa-utensils',
+        background: '#F44336',
+        borderColor: '#D32F2F',
+    },
+    {
+        position: { lat: 52.60793216818634, lng: 9.689291614949479 },
+        title: 'Hotel Ballands',
+        category: 'Hotel',
+        address: 'Ahornallee 4, 29690 Lindwedel',
+        icon: 'fa-hotel',
+        background: '#2196F3',
+        borderColor: '#1976D2',
+    },
+    {
+        position: { lat: 52.549745830694036, lng: 9.746664811751025 },
+        title: 'Pension Genat',
+        category: 'Hotel',
+        address: 'Industrieweg 4, 30900 Wedemark',
+        icon: 'fa-hotel',
+        background: '#2196F3',
+        borderColor: '#1976D2',
+    },
+    {
+        position: { lat: 52.544730590968705, lng: 9.725521454206698 },
+        title: 'Pension Beermann',
+        category: 'Hotel',
+        address: 'Hermann-Löns-Straße 7, 30900 Wedemark',
+        icon: 'fa-hotel',
+        background: '#2196F3',
+        borderColor: '#1976D2',
+    },
+    {
+        position: { lat: 52.37127997346491, lng: 9.736146320769006 },
+        title: 'Standesamt Hannover (Altes Rathaus)',
+        category: 'Standesamt',
+        address: 'Karmarschstraße 42, 30159 Hannover',
+        icon: 'fa-ring',
+        background: '#4CAF50',
+        borderColor: '#388E3C',
+    }
+];
+
 async function initMap() {
     const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
-
-    const markers = [
-        {
-            position: { lat: 52.574871898933154, lng: 9.719410040320284 },
-            title: 'Beans Restaurant',
-            icon: 'fa-utensils',
-            background: '#F44336',
-            borderColor: '#D32F2F',
-        },
-        {
-            position: { lat: 52.60793216818634, lng: 9.689291614949479 },
-            title: 'Hotel Ballands',
-            icon: 'fa-hotel',
-            background: '#2196F3',
-            borderColor: '#1976D2',
-        },
-        {
-            position: { lat: 52.549745830694036, lng: 9.746664811751025 },
-            title: 'Pension Genat',
-            icon: 'fa-hotel',
-            background: '#2196F3',
-            borderColor: '#1976D2',
-        },
-        {
-            position: { lat: 52.544730590968705, lng: 9.725521454206698 },
-            title: 'Pension Beermann',
-            icon: 'fa-hotel',
-            background: '#2196F3',
-            borderColor: '#1976D2',
-        },
-        {
-            position: { lat: 52.37127997346491, lng: 9.736146320769006 },
-            title: 'Standesamt Hannover (Altes Rathaus)',
-            icon: 'fa-ring',
-            background: '#4CAF50',
-            borderColor: '#388E3C',
-        }
-    ];
 
     var baseLocation = { lat: 52.574871898933154, lng: 9.719410040320284 };
     map = new google.maps.Map(document.getElementById('map-canvas'), {
@@ -299,8 +310,12 @@ async function initMap() {
         mapId: "a7db4426599686f6",
     });
 
+    infoWindow = new google.maps.InfoWindow({
+        disableAutoPan: false,
+        headerDisabled: true
+    });
 
-    markers.forEach(markerConfig => {
+    markers.forEach((markerConfig, index) => {
         const iconElement = document.createElement("div");
         iconElement.innerHTML = `<i class="fa ${markerConfig.icon}"></i>`;
 
@@ -319,14 +334,56 @@ async function initMap() {
             content: pin.element,
         });
 
+        const content = getInfoWindowContent(markerConfig);
+
+        marker.addListener('click', () => {
+            infoWindow.setContent(content);
+            infoWindow.open({
+                anchor: marker,
+                map
+            });
+        });
+
         storedMarkers.push(marker);
+
+        // Show info window for Beans Restaurant (first marker) on load
+        if (index === 0) {
+            // Use a slight delay to ensure the map is fully loaded
+            setTimeout(() => {
+                infoWindow.setContent(content);
+                infoWindow.open({
+                    anchor: marker,
+                    map
+                });
+            }, 200);
+        }
     });
 }
 
 function mapGoToMarker(index) {
     const marker = storedMarkers[index];
+    const markerInfo = markers[index];
     map.panTo(marker.position);
     map.setZoom(15);
+
+    const content = getInfoWindowContent(markerInfo);
+
+    infoWindow.setContent(content);
+    infoWindow.open({
+        anchor: marker,
+        map
+    });
+}
+
+function getInfoWindowContent(markerInfo) {
+    return `
+        <div class="info-window">
+            <small>${markerInfo.category}</small>
+            <h4>${markerInfo.title}</h4>
+            ${markerInfo.address ? `<p><small>${markerInfo.address}</small></p>` : ''}
+            ${markerInfo.address ? `<a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(markerInfo.address)}" target="_blank">Navigation</a>`: ''}
+        </div>
+    `;
 }
 
 // alert_markup
