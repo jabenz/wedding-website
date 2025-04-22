@@ -258,26 +258,36 @@ async function initMap() {
             position: { lat: 52.574871898933154, lng: 9.719410040320284 },
             title: 'Beans Restaurant',
             icon: 'fa-utensils',
+            background: '#F44336',
+            borderColor: '#D32F2F',
         },
         {
             position: { lat: 52.60793216818634, lng: 9.689291614949479 },
             title: 'Hotel Ballands',
             icon: 'fa-hotel',
+            background: '#2196F3',
+            borderColor: '#1976D2',
         },
         {
             position: { lat: 52.549745830694036, lng: 9.746664811751025 },
             title: 'Pension Genat',
             icon: 'fa-hotel',
+            background: '#2196F3',
+            borderColor: '#1976D2',
         },
         {
             position: { lat: 52.544730590968705, lng: 9.725521454206698 },
             title: 'Pension Beermann',
             icon: 'fa-hotel',
+            background: '#2196F3',
+            borderColor: '#1976D2',
         },
         {
             position: { lat: 52.37127997346491, lng: 9.736146320769006 },
             title: 'Standesamt Hannover (Altes Rathaus)',
             icon: 'fa-ring',
+            background: '#4CAF50',
+            borderColor: '#388E3C',
         }
     ];
 
@@ -298,6 +308,8 @@ async function initMap() {
             scale: 1,
             glyph: iconElement,
             glyphColor: "white",
+            background: markerConfig.background,
+            borderColor: markerConfig.borderColor,
         });
 
         const marker = new AdvancedMarkerElement({
