@@ -358,6 +358,12 @@ async function initMap() {
             }, 200);
         }
     });
+
+    // After all markers are added
+    addEdgeIndicatorListeners();
+    
+    // Initial update for edge indicators
+    setTimeout(updateEdgeIndicators, 200);
 }
 
 function mapGoToMarker(index) {
@@ -384,6 +390,121 @@ function getInfoWindowContent(markerInfo) {
             ${markerInfo.address ? `<a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(markerInfo.address)}" target="_blank">Navigation</a>`: ''}
         </div>
     `;
+}
+
+// Track visible markers and update edge indicators
+function updateEdgeIndicators() {
+    const bounds = map.getBounds();
+    if (!bounds) return;
+
+    // Remove any existing edge indicators
+    document.querySelectorAll('.map-edge-indicator').forEach(el => el.remove());
+    
+    markers.forEach((markerConfig, index) => {
+        const marker = storedMarkers[index];
+        const position = markerConfig.position;
+        
+        // Check if marker is within current visible bounds
+        if (bounds.contains(position)) return;
+        
+        // Determine which edge to show the indicator on
+        const mapDiv = map.getDiv();
+        const mapWidth = mapDiv.offsetWidth;
+        const mapHeight = mapDiv.offsetHeight;
+        
+        // Convert geo coordinates to pixel coordinates
+        const projection = map.getProjection();
+        const point = projection.fromLatLngToPoint(position);
+        const center = projection.fromLatLngToPoint(map.getCenter());
+        const zoom = map.getZoom();
+        const scale = Math.pow(2, zoom);
+        
+        // Calculate pixel position relative to map center
+        const pixelX = (point.x - center.x) * scale + mapWidth / 2;
+        const pixelY = (point.y - center.y) * scale + mapHeight / 2;
+        
+        // Determine edge position with padding from edge
+        let x, y, rotation;
+        const edgePadding = 30; // Increased padding from edge
+        
+        if (pixelX < 0) { // Left edge
+            x = edgePadding;
+            y = Math.min(Math.max(pixelY, 40), mapHeight - 40);
+            rotation = 270;
+        } else if (pixelX > mapWidth) { // Right edge
+            x = mapWidth - edgePadding;
+            y = Math.min(Math.max(pixelY, 40), mapHeight - 40);
+            rotation = 90;
+        } else if (pixelY < 0) { // Top edge
+            x = Math.min(Math.max(pixelX, 40), mapWidth - 40);
+            y = edgePadding;
+            rotation = 0;
+        } else { // Bottom edge
+            x = Math.min(Math.max(pixelX, 40), mapWidth - 40);
+            y = mapHeight - edgePadding;
+            rotation = 180;
+        }
+        
+        // Create indicator element
+        const indicator = document.createElement('div');
+        indicator.className = 'map-edge-indicator';
+        indicator.style.cssText = `
+            position: absolute;
+            left: ${x}px;
+            top: ${y}px;
+            width: 40px;
+            height: 40px;
+            margin-left: -20px;
+            margin-top: -20px;
+            background-color: ${markerConfig.background};
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        `;
+        
+        // Use same icon as the marker
+        indicator.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <i class="fa ${markerConfig.icon}" style="font-size: 16px;"></i>
+                <i class="fa fa-chevron-up" style="font-size: 10px; margin-top: 2px; transform: rotate(${rotation}deg);"></i>
+            </div>
+        `;
+        
+        indicator.title = markerConfig.title; // Add tooltip with marker name
+        
+        // Add hover effect
+        indicator.addEventListener('mouseenter', () => {
+            indicator.style.transform = 'scale(1.2)';
+            indicator.style.boxShadow = '0 3px 8px rgba(0,0,0,0.5)';
+        });
+        
+        indicator.addEventListener('mouseleave', () => {
+            indicator.style.transform = 'scale(1)';
+            indicator.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
+        });
+        
+        // Add click handler to pan to the marker
+        indicator.addEventListener('click', () => {
+            mapGoToMarker(index);
+        });
+        
+        // Add to map
+        mapDiv.appendChild(indicator);
+    });
+}
+
+// Attach edge indicator update to map events
+function addEdgeIndicatorListeners() {
+    // Update indicators on map movement
+    map.addListener('idle', updateEdgeIndicators);
+    map.addListener('zoom_changed', updateEdgeIndicators);
 }
 
 // alert_markup
