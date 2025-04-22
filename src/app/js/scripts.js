@@ -200,7 +200,7 @@ $(document).ready(function () {
             address: 'Beans Restaurant, Kaffeedamm 2, 30900 Wedemark',
 
             // Event Description
-            description: "Wir freuen uns auf euch! Bei Fragen meldet euch gerne bei unseren Trauzeugen Jonas (Tel..) oder Vivien (Tel...)"
+            description: "Wir freuen uns auf euch! Bei Fragen meldet euch gerne bei unseren Trauzeugen Jonas (Tel +49171 6940327) oder Vivien (Tel +49176 20627648)"
         }
     });
 
