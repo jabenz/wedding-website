@@ -369,16 +369,59 @@ async function initMap() {
 function mapGoToMarker(index) {
     const marker = storedMarkers[index];
     const markerInfo = markers[index];
-    map.panTo(marker.position);
-    map.setZoom(15);
-
-    const content = getInfoWindowContent(markerInfo);
-
-    infoWindow.setContent(content);
-    infoWindow.open({
-        anchor: marker,
-        map
-    });
+    
+    // Close any open info window
+    infoWindow.close();
+    
+    // Get current and target positions
+    const currentLat = map.getCenter().lat();
+    const currentLng = map.getCenter().lng();
+    const targetLat = marker.position.lat;
+    const targetLng = marker.position.lng;
+    
+    // Calculate distance to move
+    const latDiff = targetLat - currentLat;
+    const lngDiff = targetLng - currentLng;
+    
+    // Animate the pan
+    const animationDuration = 750; // milliseconds
+    const frames = 60;
+    const frameTime = animationDuration / frames;
+    let frameCount = 0;
+    
+    function animateFrame() {
+        if (frameCount < frames) {
+            // Calculate easing progress (ease-out function)
+            const progress = 1 - Math.pow(1 - frameCount / frames, 3);
+            
+            // Calculate new center position
+            const newLat = currentLat + latDiff * progress;
+            const newLng = currentLng + lngDiff * progress;
+            
+            // Set the new center
+            map.setCenter({ lat: newLat, lng: newLng });
+            
+            // Increment frame count
+            frameCount++;
+            
+            // Request next frame
+            setTimeout(animateFrame, frameTime);
+        } else {
+            // Animation complete, now set zoom and open info window
+            map.setZoom(15);
+            
+            setTimeout(() => {
+                infoWindow.setContent(getInfoWindowContent(markerInfo));
+                infoWindow.open({
+                    anchor: marker,
+                    map
+                });
+            }, 200);
+        }
+    }
+    
+    // Start animation
+    animateFrame();
 }
 
 function getInfoWindowContent(markerInfo) {
@@ -400,14 +443,21 @@ function updateEdgeIndicators() {
     // Remove any existing edge indicators
     document.querySelectorAll('.map-edge-indicator').forEach(el => el.remove());
     
+    // Group markers by edge
+    const edgeMarkers = {
+        top: [],
+        right: [],
+        bottom: [],
+        left: []
+    };
+    
+    // First pass: determine which edge each off-screen marker belongs to
     markers.forEach((markerConfig, index) => {
-        const marker = storedMarkers[index];
         const position = markerConfig.position;
         
-        // Check if marker is within current visible bounds
+        // Skip visible markers
         if (bounds.contains(position)) return;
         
-        // Determine which edge to show the indicator on
         const mapDiv = map.getDiv();
         const mapWidth = mapDiv.offsetWidth;
         const mapHeight = mapDiv.offsetHeight;
@@ -423,39 +473,40 @@ function updateEdgeIndicators() {
         const pixelX = (point.x - center.x) * scale + mapWidth / 2;
         const pixelY = (point.y - center.y) * scale + mapHeight / 2;
         
-        // Determine edge position with padding from edge
-        let x, y, rotation;
-        const edgePadding = 30; // Increased padding from edge
-        
+        // Determine edge and add to appropriate group
+        let edge;
         if (pixelX < 0) { // Left edge
-            x = edgePadding;
-            y = Math.min(Math.max(pixelY, 40), mapHeight - 40);
-            rotation = 270;
+            edge = 'left';
+            edgeMarkers.left.push({ index, y: pixelY, config: markerConfig });
         } else if (pixelX > mapWidth) { // Right edge
-            x = mapWidth - edgePadding;
-            y = Math.min(Math.max(pixelY, 40), mapHeight - 40);
-            rotation = 90;
+            edge = 'right';
+            edgeMarkers.right.push({ index, y: pixelY, config: markerConfig });
         } else if (pixelY < 0) { // Top edge
-            x = Math.min(Math.max(pixelX, 40), mapWidth - 40);
-            y = edgePadding;
-            rotation = 0;
+            edge = 'top';
+            edgeMarkers.top.push({ index, x: pixelX, config: markerConfig });
         } else { // Bottom edge
-            x = Math.min(Math.max(pixelX, 40), mapWidth - 40);
-            y = mapHeight - edgePadding;
-            rotation = 180;
+            edge = 'bottom';
+            edgeMarkers.bottom.push({ index, x: pixelX, config: markerConfig });
         }
-        
-        // Create indicator element
+    });
+    
+    // Second pass: position markers on each edge to avoid overlaps
+    const edgePadding = 30;
+    const indicatorSize = 40; // Width/height of indicator
+    const minSpacing = 70; // Minimum pixels between indicators
+    
+    // Helper function to create an edge indicator
+    function createEdgeIndicator(x, y, markerConfig, index, rotation) {
         const indicator = document.createElement('div');
         indicator.className = 'map-edge-indicator';
         indicator.style.cssText = `
             position: absolute;
             left: ${x}px;
             top: ${y}px;
-            width: 40px;
-            height: 40px;
-            margin-left: -20px;
-            margin-top: -20px;
+            width: ${indicatorSize}px;
+            height: ${indicatorSize}px;
+            margin-left: -${indicatorSize/2}px;
+            margin-top: -${indicatorSize/2}px;
             background-color: ${markerConfig.background};
             border: 3px solid white;
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -469,7 +520,6 @@ function updateEdgeIndicators() {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         `;
         
-        // Use same icon as the marker
         indicator.innerHTML = `
             <div style="display: flex; flex-direction: column; align-items: center;">
                 <i class="fa ${markerConfig.icon}" style="font-size: 16px;"></i>
@@ -477,9 +527,8 @@ function updateEdgeIndicators() {
             </div>
         `;
         
-        indicator.title = markerConfig.title; // Add tooltip with marker name
+        indicator.title = markerConfig.title;
         
-        // Add hover effect
         indicator.addEventListener('mouseenter', () => {
             indicator.style.transform = 'scale(1.2)';
             indicator.style.boxShadow = '0 3px 8px rgba(0,0,0,0.5)';
@@ -490,14 +539,102 @@ function updateEdgeIndicators() {
             indicator.style.boxShadow = '0 2px 6px rgba(0,0,0,0.3)';
         });
         
-        // Add click handler to pan to the marker
         indicator.addEventListener('click', () => {
             mapGoToMarker(index);
         });
         
-        // Add to map
-        mapDiv.appendChild(indicator);
-    });
+        return indicator;
+    }
+    
+    const mapDiv = map.getDiv();
+    const mapWidth = mapDiv.offsetWidth;
+    const mapHeight = mapDiv.offsetHeight;
+    
+    // Position top edge indicators
+    if (edgeMarkers.top.length > 0) {
+        edgeMarkers.top.sort((a, b) => a.x - b.x);
+        
+        // Distribute evenly if they would overlap
+        if (edgeMarkers.top.length > 1) {
+            const availableWidth = mapWidth - 80; // 40px padding on each side
+            const idealSpacing = Math.max(minSpacing, availableWidth / edgeMarkers.top.length);
+            
+            edgeMarkers.top.forEach((marker, i) => {
+                const x = 40 + i * idealSpacing;
+                const indicator = createEdgeIndicator(x, edgePadding, marker.config, marker.index, 0);
+                mapDiv.appendChild(indicator);
+            });
+        } else {
+            // Just one marker, place at original x position
+            const marker = edgeMarkers.top[0];
+            const x = Math.min(Math.max(marker.x, 40), mapWidth - 40);
+            const indicator = createEdgeIndicator(x, edgePadding, marker.config, marker.index, 0);
+            mapDiv.appendChild(indicator);
+        }
+    }
+    
+    // Position bottom edge indicators
+    if (edgeMarkers.bottom.length > 0) {
+        edgeMarkers.bottom.sort((a, b) => a.x - b.x);
+        
+        if (edgeMarkers.bottom.length > 1) {
+            const availableWidth = mapWidth - 80;
+            const idealSpacing = Math.max(minSpacing, availableWidth / edgeMarkers.bottom.length);
+            
+            edgeMarkers.bottom.forEach((marker, i) => {
+                const x = 40 + i * idealSpacing;
+                const indicator = createEdgeIndicator(x, mapHeight - edgePadding, marker.config, marker.index, 180);
+                mapDiv.appendChild(indicator);
+            });
+        } else {
+            const marker = edgeMarkers.bottom[0];
+            const x = Math.min(Math.max(marker.x, 40), mapWidth - 40);
+            const indicator = createEdgeIndicator(x, mapHeight - edgePadding, marker.config, marker.index, 180);
+            mapDiv.appendChild(indicator);
+        }
+    }
+    
+    // Position left edge indicators
+    if (edgeMarkers.left.length > 0) {
+        edgeMarkers.left.sort((a, b) => a.y - b.y);
+        
+        if (edgeMarkers.left.length > 1) {
+            const availableHeight = mapHeight - 80;
+            const idealSpacing = Math.max(minSpacing, availableHeight / edgeMarkers.left.length);
+            
+            edgeMarkers.left.forEach((marker, i) => {
+                const y = 40 + i * idealSpacing;
+                const indicator = createEdgeIndicator(edgePadding, y, marker.config, marker.index, 270);
+                mapDiv.appendChild(indicator);
+            });
+        } else {
+            const marker = edgeMarkers.left[0];
+            const y = Math.min(Math.max(marker.y, 40), mapHeight - 40);
+            const indicator = createEdgeIndicator(edgePadding, y, marker.config, marker.index, 270);
+            mapDiv.appendChild(indicator);
+        }
+    }
+    
+    // Position right edge indicators
+    if (edgeMarkers.right.length > 0) {
+        edgeMarkers.right.sort((a, b) => a.y - b.y);
+        
+        if (edgeMarkers.right.length > 1) {
+            const availableHeight = mapHeight - 80;
+            const idealSpacing = Math.max(minSpacing, availableHeight / edgeMarkers.right.length);
+            
+            edgeMarkers.right.forEach((marker, i) => {
+                const y = 40 + i * idealSpacing;
+                const indicator = createEdgeIndicator(mapWidth - edgePadding, y, marker.config, marker.index, 90);
+                mapDiv.appendChild(indicator);
+            });
+        } else {
+            const marker = edgeMarkers.right[0];
+            const y = Math.min(Math.max(marker.y, 40), mapHeight - 40);
+            const indicator = createEdgeIndicator(mapWidth - edgePadding, y, marker.config, marker.index, 90);
+            mapDiv.appendChild(indicator);
+        }
+    }
 }
 
 // Attach edge indicator update to map events
