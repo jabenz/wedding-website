@@ -870,10 +870,11 @@ Google map
 .map-edge-indicator {
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   animation: pulse-edge 1s ease-in-out;
+  z-index: 1 !important; /* Lower z-index to appear behind nav and controls */
   
   &:hover {
     transform: scale(1.2);
-    z-index: 1001;
+    z-index: 91 !important; /* Still behind nav but above other indicators when hovered */
   }
 }
 

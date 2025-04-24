@@ -516,7 +516,7 @@ function updateEdgeIndicators() {
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            z-index: 1000;
+            z-index: 1; /* Lower than nav bar and map controls */
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         `;
         
