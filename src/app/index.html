@@ -411,8 +411,8 @@
             <!-- <i onclick="mapGoToMarker(0)" class="fa fa-map-location-dot" style="cursor:pointer;"></i>&nbsp;
             Kaffeedamm 2<br>30900 Wedemark -->
             <a class="btn btn-accent btn-small" href="#map"
-              target="_blank">
-              <i onclick="mapGoToMarker(0)" class="fa fa-map-location-dot"></i>&nbsp;&nbsp; Kaffeedamm 2, 30900 Wedemark
+              target="_blank" onclick="event.preventDefault(); mapGoToMarker(0);">
+              <i class="fa fa-map-location-dot"></i>&nbsp;&nbsp; Kaffeedamm 2, 30900 Wedemark
             </a>
           </p>
 
@@ -492,7 +492,7 @@
       <div class="row">
         <div class="col-md-6 col-md-offset-3">
           <h3>Worauf wartet ihr noch?</h3>
-          <p>Es wäre toll, wenn ihr euch vor dem 15. August 2025 anmelden würdet.</p>
+          <p>Bitte meldet euch vor dem <strong>15. August 2025</strong> zurück</p>
           <form id="rsvp-form" class="rsvp-form" action="" method="POST">
             <div class="row">
               <div class="col-md-6 col-sm-6">
