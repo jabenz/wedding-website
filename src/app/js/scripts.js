@@ -296,6 +296,24 @@ const markers = [
         icon: 'fa-ring',
         background: '#4CAF50',
         borderColor: '#388E3C',
+    },
+    {
+        position: { lat: 52.37008670938518, lng: 9.737431924595946 },
+        title: 'Parkplatz Marktstraße',
+        category: 'Parking',
+        address: 'Markstraße 47, 30159 Hannover',
+        icon: 'fa-parking',
+        background: '#8BC34A',
+        borderColor: '#689F38',
+    },
+    {
+        position: { lat: 52.37090027499516, lng: 9.737617816992994 },
+        title: 'CONTIPARK Parkhaus Markthalle', 
+        category: 'Parking',
+        address: 'Röselerstraße 7, 30159 Hannover',
+        icon: 'fa-parking',
+        background: '#8BC34A',
+        borderColor: '#689F38',
     }
 ];
 

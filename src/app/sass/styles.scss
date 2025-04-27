@@ -12,6 +12,17 @@
 /* ==========================================================================
 Global Styles
 ========================================================================== */
+.text-img-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 34px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
 .group:after {
   content: "";
   display: table;
