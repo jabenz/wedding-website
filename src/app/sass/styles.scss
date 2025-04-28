@@ -30,8 +30,11 @@ Global Styles
   overflow: hidden;
   border: 3px solid $accent-color;
   margin: auto;
+  display: -webkit-flex;
   display: flex;
+  -webkit-justify-content: center;
   justify-content: center;
+  -webkit-align-items: center;
   align-items: center;
 }
 .group:after {
