@@ -4,7 +4,7 @@
         margin: 0 auto;
     }
 
-    .intro-content {
+    .nochfragen-content {
         display: inline-block;
         width: 70%;
     }
@@ -181,7 +181,7 @@
         transition-delay: 0.30s
     }
 
-    .intro-content {
+    .nochfragen-content {
         display: inline-block;
         width: 75%;
         margin-bottom: 30px;

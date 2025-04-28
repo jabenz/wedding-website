@@ -23,6 +23,17 @@ Global Styles
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
   text-align: center;
 }
+.circular-container {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid $accent-color;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .group:after {
   content: "";
   display: table;
@@ -275,6 +286,7 @@ Hero
     bottom: 100px;
     left: 50%;
   }*/
+  
   .down-arrow a {
     color: $txt-light;
   }
@@ -282,7 +294,7 @@ Hero
     color: $txt-light;
     margin-bottom: 40px;
   }
-  p.intro {
+  p.nochfragen {
     color: $txt-light;
     font-size: 20px;
     font-weight: 300;
@@ -393,19 +405,19 @@ Social share buttons
 /* ==========================================================================
 Intro
 ========================================================================== */
-.intro span.icon {
+.nochfragen span.icon {
   font-size: 40px;
   color: $accent-color;
   font-weight: bold;
 }
-.intro-icon {
+.nochfragen-icon {
   display: inline-block;
   vertical-align: top;
   padding: 6px 0 0 0;
   margin-right: 20px;
   width: 40px;
 }
-.intro-content {
+.nochfragen-content {
   display: inline-block;
   width: 80%;
 }
@@ -450,13 +462,13 @@ Features-stack
     display: inline-block;
     width: 75%;
   }
-  .intro-icon {
+  .nochfragen-icon {
     display: inline-block;
     vertical-align: top;
     padding: 6px 0 0 0;
     margin-right: 20px;
   }
-  .intro-content {
+  .nochfragen-content {
     display: inline-block;
     width: 80%;
   }
@@ -574,7 +586,7 @@ Features-stack
   .time {
     font-size: 13px;
     font-style: italic;
-    text-transform: lowercase;
+    //text-transform: lowercase;
     color: $txt-primary;
   }
 }
