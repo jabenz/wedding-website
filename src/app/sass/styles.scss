@@ -26,6 +26,16 @@ Global Styles
 .circular-container {
   width: 250px;
   height: 250px;
+
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 150px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100px;
+    height: 100px;
+  }
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid $accent-color;

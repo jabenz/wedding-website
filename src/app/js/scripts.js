@@ -314,6 +314,15 @@ const markers = [
         icon: 'fa-parking',
         background: '#8BC34A',
         borderColor: '#689F38',
+    },
+    {
+        position: { lat: 52.58066254815064, lng: 9.72739739740679 },
+        title: 'S-Bahn Station Bennemühlen', 
+        category: 'Anreise',
+        address: 'Am Bahnhof 1, 30900 Wedemark',
+        icon: 'fa-train-tram',
+        background: '#f3ad21',
+        borderColor: '#9e7c37',
     }
 ];
 
