@@ -20,14 +20,14 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
     [Function("Rsvp")]
     public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
     {
-        _logger.LogInformation("RSVP function triggered (URI: {Uri})", req.GetDisplayUrl());
+        _logger.LogInformation("RSVP function triggered (URI: {Uri}/{Query})", req.GetDisplayUrl(), req.QueryString.ToString());
 
         var host = req.Headers.Host.ToString();
         if (host == null || !options.Value.AllowedHosts.Any(r => r == host))
         {
             _logger.LogError("Invalid referer: {Referer}", host);
             return new StatusCodeResult(StatusCodes.Status403Forbidden);
-        }   
+        }
 
         // if (options.Value.InviteCode == null)
         // {
