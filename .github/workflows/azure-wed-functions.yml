@@ -67,7 +67,7 @@ jobs:
             --settings \
               "RsvpOptions__InviteCode=${{ secrets.RSVP_INVITE_CODE }}" \
               "RsvpOptions__AllowedHosts__0=laura-und.marvin-stue.de" \
-              "RsvpOptions__AllowedHosts__0=localhost:7234" \
+              "RsvpOptions__AllowedHosts__1=localhost:7234" \
               "RegistrationsOptions__QueryCode=${{ secrets.REGISTRATION_QUERY_CODE }}" \
               "CosmosDbOptions__ConnectionString=${{ secrets.COSMOSDB_CONNECTION_STRING }}" \
               "CosmosDbOptions__TableName=${{ secrets.COSMOSDB_TABLE_NAME }}"
