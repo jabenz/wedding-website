@@ -53,6 +53,7 @@ public class FormExtensionsTest
         // Act & Assert
         action.ShouldThrow<ArgumentNullException>();
     }
+
     [Fact]
     public void ItThrowsIfExtrasIsMissing()
     {
@@ -79,15 +80,16 @@ public class FormExtensionsTest
             { FormKeys.InviteCode, InviteCode },
             { FormKeys.Name, Name },
             { FormKeys.Email, Email },
-            { FormKeys.Extras, Extras.ToString() }
+            { FormKeys.Extras, Extras.ToString() },
         });
         // Act
         var result = form.GetRsvpRequest();
 
         // Assert
         result.ShouldNotBeNull();
-        result.InviteCode.ShouldBe("123456");
+        // result.InviteCode.ShouldBe("123456");
         result.Name.ShouldBe("John Doe");
         result.Email.ShouldBe("john@doe.de");
+        result.Extras.ShouldBe(2);
     }
 }

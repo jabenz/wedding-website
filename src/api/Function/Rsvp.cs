@@ -22,11 +22,18 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
     {
         _logger.LogInformation("RSVP function triggered (URI: {Uri})", req.GetDisplayUrl());
 
-        if (options.Value.InviteCode == null)
+        var host = req.Headers.Host.ToString();
+        if (host == null || !options.Value.AllowedHosts.Any(r => r == host))
         {
-            _logger.LogError("Invite code is not set in configuration");
-            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-        }
+            _logger.LogError("Invalid referer: {Referer}", host);
+            return new StatusCodeResult(StatusCodes.Status403Forbidden);
+        }   
+
+        // if (options.Value.InviteCode == null)
+        // {
+        //     _logger.LogError("Invite code is not set in configuration");
+        //     return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        // }
 
         _logger.LogInformation("Processing RSVP request");
         if (!HttpMethods.IsPost(req.Method))
@@ -54,10 +61,10 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
             return new BadRequestObjectResult("Invalid request format");
         }
 
-        if (rsvpRequest.InviteCode != options.Value.InviteCode)
-        {
-            return new StatusCodeResult(StatusCodes.Status403Forbidden);
-        }
+        // if (rsvpRequest.InviteCode != options.Value.InviteCode)
+        // {
+        //     return new StatusCodeResult(StatusCodes.Status403Forbidden);
+        // }
 
         _logger.LogInformation("Valid rsvp request");
 
@@ -65,7 +72,7 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
         {
             Name = rsvpRequest.Name,
             Email = rsvpRequest.Email,
-            Extras = rsvpRequest.Extras
+            Extras = rsvpRequest.Extras,
         };
 
         try

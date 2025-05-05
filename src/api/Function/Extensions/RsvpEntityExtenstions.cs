@@ -11,6 +11,7 @@ public static class RsvpEntityExtenstions
             Name = form.Name,
             Email = form.Email,
             Extras = form.Extras,
+            Notes = form.Notes,
             CreatedAt = form.Timestamp?.DateTime ?? DateTime.UtcNow,
         };
 }
