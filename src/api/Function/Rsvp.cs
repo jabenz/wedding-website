@@ -20,7 +20,7 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
     [Function("Rsvp")]
     public async Task<IActionResult> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req)
     {
-        _logger.LogInformation("RSVP function triggered (URI: {Uri}/{Query})", req.GetDisplayUrl(), req.QueryString.ToString());
+        _logger.LogInformation("RSVP function triggered (URI: {Uri})", req.GetDisplayUrl());
 
         var host = req.Headers.Host.ToString();
         if (host == null || !options.Value.AllowedHosts.Any(r => r == host))
