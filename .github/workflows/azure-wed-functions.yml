@@ -52,9 +52,9 @@ jobs:
     - name: Login to Azure
       uses: azure/login@v2
       with:
-        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_59D8A575BB964A36B4FB28D037ED8058 }}
-        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_15AEA08C550444D88E75D755967BF4CC }}
-        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1030960201D44D97B8197447E360E024 }}
+        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_3EA0CBC09A174874B0DC9AF4F415FF85 }}
+        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F54E685E0E474CE69F3FEFD8159440CC }}
+        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F509572AA85347CDA285C4C8A867B678 }}
 
     # Add this step to set the app settings before deploying
     - name: 'Set Azure Function App Settings'
