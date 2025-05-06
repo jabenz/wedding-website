@@ -25,7 +25,7 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
         var host = req.Headers.Host.ToString();
         if (host == null || !options.Value.AllowedHosts.Any(r => r == host))
         {
-            _logger.LogError("Invalid referer: {Referer}", host);
+            _logger.LogError("Invalid host: {Host}", host);
             return new StatusCodeResult(StatusCodes.Status403Forbidden);
         }
 
