@@ -56,7 +56,6 @@ jobs:
         tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F54E685E0E474CE69F3FEFD8159440CC }}
         subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F509572AA85347CDA285C4C8A867B678 }}
 
-    # Add this step to set the app settings before deploying
     - name: 'Set Azure Function App Settings'
       uses: azure/CLI@v1
       with:
