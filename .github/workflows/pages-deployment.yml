@@ -6,7 +6,7 @@ on:
     - master
     paths:
     - "src/app/**"
-    - ".github/workflows/azure-static-web-apps.yml"
+    - ".github/workflows/pages-deployment.yml"
 
 jobs:
   build_and_deploy_job:
