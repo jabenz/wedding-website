@@ -4,6 +4,7 @@ using api.Entities;
 using api.Exceptions;
 using api.Helper;
 using api.Repositories;
+using api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,7 @@ public class RsvpTest
 
     private readonly ILogger<Rsvp> _logger = Mock.Of<ILogger<Rsvp>>();
     private readonly ITableRepository _tableRepository = Mock.Of<ITableRepository>();
+    private readonly ITurnstileService _turnstileService = Mock.Of<ITurnstileService>();
     private readonly Rsvp _function;
     private readonly IOptions<RsvpOptions> _options = Options.Create(new RsvpOptions()
     {
@@ -32,7 +34,10 @@ public class RsvpTest
 
     public RsvpTest()
     {
-        _function = new Rsvp(_logger, _options, _tableRepository);
+        _function = new Rsvp(_logger, _tableRepository, _turnstileService);
+        Mock.Get(_turnstileService)
+            .Setup(service => service.ValidateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
     }
 
     [Fact]
@@ -185,22 +190,22 @@ public class RsvpTest
         result.ShouldBeOfType<ConflictObjectResult>();
     }
 
-    [Fact]
-    public async Task ItRejectsOnUnexpectedHost()
-    {
-        // Arrange
-        var request = new DefaultHttpContext().Request;
-        request.Method = "POST";
-        request.Form = request.Form = CreateFormCollection(InviteCode, Name, Email, Extras);
-        request.Host = new HostString("unexpected-host.com");
+    // [Fact]
+    // public async Task ItRejectsOnUnexpectedHost()
+    // {
+    //     // Arrange
+    //     var request = new DefaultHttpContext().Request;
+    //     request.Method = "POST";
+    //     request.Form = request.Form = CreateFormCollection(InviteCode, Name, Email, Extras);
+    //     request.Host = new HostString("unexpected-host.com");
 
-        // Act
-        var result = await _function.RunAsync(request);
+    //     // Act
+    //     var result = await _function.RunAsync(request);
 
-        // Assert
-        result.ShouldBeOfType<StatusCodeResult>()
-            .StatusCode.ShouldBe(StatusCodes.Status403Forbidden);
-    }
+    //     // Assert
+    //     result.ShouldBeOfType<StatusCodeResult>()
+    //         .StatusCode.ShouldBe(StatusCodes.Status403Forbidden);
+    // }
 
 
     private static FormCollection CreateFormCollection(string inviteCode, string name, string email, int extras)
@@ -210,5 +215,6 @@ public class RsvpTest
             { FormKeys.Name, name },
             { FormKeys.Email, email },
             { FormKeys.Extras, extras.ToString() },
+            { "cf-turnstile-response", "some-token" }
         });
 }

@@ -1,5 +1,6 @@
 using api.Configuration;
 using api.Repositories;
+using api.Services;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,17 @@ builder.Services
     .BindConfiguration(nameof(RegistrationsOptions))
     .ValidateDataAnnotations()
     .ValidateOnStart();
+
+builder.Services
+    .AddOptions<TurnstileOptions>()
+    .BindConfiguration(nameof(TurnstileOptions))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+builder.Services.AddHttpClient<ITurnstileService, TurnstileService>(client =>
+{
+    client.BaseAddress = new Uri("https://challenges.cloudflare.com");
+});
 
 builder.Services.AddScoped<ITableRepository, TableRepository>();
 

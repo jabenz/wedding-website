@@ -10,10 +10,11 @@ using api.Repositories;
 using api.Entities;
 using api.Exceptions;
 using Microsoft.AspNetCore.Http.Extensions;
+using api.Services;
 
 namespace api;
 
-public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRepository tableRepository)
+public class Rsvp(ILogger<Rsvp> logger, /* IOptions<RsvpOptions> options, */ ITableRepository tableRepository, ITurnstileService turnstileService)
 {
     private readonly ILogger<Rsvp> _logger = logger;
 
@@ -22,20 +23,6 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
     {
         _logger.LogInformation("RSVP function triggered (URI: {Uri})", req.GetDisplayUrl());
 
-        var host = req.Headers.Host.ToString();
-        if (host == null || !options.Value.AllowedHosts.Any(r => r == host))
-        {
-            _logger.LogError("Invalid host: {Host}", host);
-            return new StatusCodeResult(StatusCodes.Status403Forbidden);
-        }
-
-        // if (options.Value.InviteCode == null)
-        // {
-        //     _logger.LogError("Invite code is not set in configuration");
-        //     return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-        // }
-
-        _logger.LogInformation("Processing RSVP request");
         if (!HttpMethods.IsPost(req.Method))
         {
             _logger.LogWarning("Request method {Method} not allowed", req.Method);
@@ -47,6 +34,34 @@ public class Rsvp(ILogger<Rsvp> logger, IOptions<RsvpOptions> options, ITableRep
             _logger.LogWarning("Request content type {ContentType} not allowed", req.ContentType);
             return new StatusCodeResult(StatusCodes.Status415UnsupportedMediaType);
         }
+
+        var turnstileResponse = req.Form["cf-turnstile-response"].ToString();
+        if (string.IsNullOrEmpty(turnstileResponse))
+        {
+            _logger.LogError("Turnstile response is missing in the request");
+            return new StatusCodeResult(StatusCodes.Status403Forbidden);
+        }
+
+        var isCaptchaValid = await turnstileService.ValidateAsync(turnstileResponse, Guid.NewGuid().ToString(), CancellationToken.None);
+        if (!isCaptchaValid)
+        {
+            _logger.LogError("Captcha validation failed");
+            return new StatusCodeResult(StatusCodes.Status403Forbidden);
+        }
+
+        // var host = req.Headers.Host.ToString();
+        // if (host == null || !options.Value.AllowedHosts.Any(r => r == host))
+        // {
+        //     _logger.LogError("Invalid host: {Host}", host);
+        //     return new StatusCodeResult(StatusCodes.Status403Forbidden);
+        // }
+
+        // if (options.Value.InviteCode == null)
+        // {
+        //     _logger.LogError("Invite code is not set in configuration");
+        //     return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        // }
+
 
         RsvpRequest rsvpRequest;
         try

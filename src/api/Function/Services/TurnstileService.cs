@@ -1,0 +1,35 @@
+using System.Net;
+using System.Text.Json;
+using api.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
+namespace api.Services;
+
+public class TurnstileService(HttpClient client, IOptions<TurnstileOptions> options, ILogger<TurnstileService> logger) : ITurnstileService
+{
+    public async Task<bool> ValidateAsync(string token, string idempotencyKey, CancellationToken ct = default)
+    {
+        try
+        {
+            var formData = new Dictionary<string, string>
+                {
+                    { "secret", options.Value.SecretKey },
+                    { "response", token },
+                    { "idempotency_key", idempotencyKey }
+                };
+
+            var content = new FormUrlEncodedContent(formData);
+
+            var response = await client.PostAsync("/turnstile/v0/siteverify", content, ct);
+            var result = await response.Content.ReadAsStringAsync(ct);
+            var resultObject = JsonSerializer.Deserialize<JsonElement>(result);
+            return resultObject.GetProperty("success").GetBoolean();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error validating Turnstile token");
+            return false;
+        }
+    }
+}
