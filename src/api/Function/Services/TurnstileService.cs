@@ -8,7 +8,7 @@ namespace api.Services;
 
 public class TurnstileService(HttpClient client, IOptions<TurnstileOptions> options, ILogger<TurnstileService> logger) : ITurnstileService
 {
-    public async Task<bool> ValidateAsync(string token, string idempotencyKey, CancellationToken ct = default)
+    public async Task<bool> ValidateAsync(string token, CancellationToken ct = default)
     {
         try
         {
@@ -16,7 +16,7 @@ public class TurnstileService(HttpClient client, IOptions<TurnstileOptions> opti
                 {
                     { "secret", options.Value.SecretKey },
                     { "response", token },
-                    { "idempotency_key", idempotencyKey }
+                    { "idempotency_key", Guid.NewGuid().ToString() }
                 };
 
             var content = new FormUrlEncodedContent(formData);

@@ -36,7 +36,7 @@ public class RsvpTest
     {
         _function = new Rsvp(_logger, _tableRepository, _turnstileService);
         Mock.Get(_turnstileService)
-            .Setup(service => service.ValidateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Setup(service => service.ValidateAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
     }
 

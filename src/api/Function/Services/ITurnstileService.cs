@@ -4,5 +4,5 @@ namespace api.Services;
 
 public interface ITurnstileService
 {
-    Task<bool> ValidateAsync(string token, string idempotencyKey, CancellationToken ct = default);
+    Task<bool> ValidateAsync(string token, CancellationToken ct = default);
 }

@@ -42,7 +42,7 @@ public class Rsvp(ILogger<Rsvp> logger, /* IOptions<RsvpOptions> options, */ ITa
             return new StatusCodeResult(StatusCodes.Status403Forbidden);
         }
 
-        var isCaptchaValid = await turnstileService.ValidateAsync(turnstileResponse, Guid.NewGuid().ToString(), CancellationToken.None);
+        var isCaptchaValid = await turnstileService.ValidateAsync(turnstileResponse, CancellationToken.None);
         if (!isCaptchaValid)
         {
             _logger.LogError("Captcha validation failed");
