@@ -24,7 +24,11 @@ public class TurnstileService(HttpClient client, IOptions<TurnstileOptions> opti
             var response = await client.PostAsync("/turnstile/v0/siteverify", content, ct);
             var result = await response.Content.ReadAsStringAsync(ct);
             var resultObject = JsonSerializer.Deserialize<JsonElement>(result);
-            return resultObject.GetProperty("success").GetBoolean();
+            var validationResult = resultObject.GetProperty("success").GetBoolean();
+
+            logger.LogInformation("Turnstile validation result: {Result}", validationResult);
+
+            return validationResult;
         }
         catch (Exception ex)
         {
