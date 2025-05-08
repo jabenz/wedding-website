@@ -42,12 +42,12 @@ public class Rsvp(ILogger<Rsvp> logger, /* IOptions<RsvpOptions> options, */ ITa
             return new StatusCodeResult(StatusCodes.Status403Forbidden);
         }
 
-        var isCaptchaValid = await turnstileService.ValidateAsync(turnstileResponse, CancellationToken.None);
-        if (!isCaptchaValid)
-        {
-            _logger.LogError("Captcha validation failed");
-            return new StatusCodeResult(StatusCodes.Status403Forbidden);
-        }
+        // var isCaptchaValid = await turnstileService.ValidateAsync(turnstileResponse, CancellationToken.None);
+        // if (!isCaptchaValid)
+        // {
+        //     _logger.LogError("Captcha validation failed");
+        //     return new StatusCodeResult(StatusCodes.Status403Forbidden);
+        // }
 
         // var host = req.Headers.Host.ToString();
         // if (host == null || !options.Value.AllowedHosts.Any(r => r == host))
