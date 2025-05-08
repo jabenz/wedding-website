@@ -12,11 +12,12 @@ public class TurnstileService(HttpClient client, IOptions<TurnstileOptions> opti
     {
         try
         {
+            var idempotencyKey = Guid.NewGuid().ToString();
             var formData = new Dictionary<string, string>
                 {
                     { "secret", options.Value.SecretKey },
                     { "response", token },
-                    { "idempotency_key", Guid.NewGuid().ToString() }
+                    { "idempotency_key", idempotencyKey }
                 };
 
             var content = new FormUrlEncodedContent(formData);
@@ -26,7 +27,7 @@ public class TurnstileService(HttpClient client, IOptions<TurnstileOptions> opti
             var resultObject = JsonSerializer.Deserialize<JsonElement>(result);
             var validationResult = resultObject.GetProperty("success").GetBoolean();
 
-            logger.LogInformation("Turnstile validation result: {Result}", validationResult);
+            logger.LogInformation("Turnstile validation result: {Result}, ik: {IdempotencyKey}", validationResult, idempotencyKey);
 
             return validationResult;
         }
