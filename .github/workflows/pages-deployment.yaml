@@ -1,0 +1,43 @@
+name: GitHub Pages Deployment
+
+on:
+  push:
+    branches:
+    - master
+    paths:
+    - "src/app/**"
+    - ".github/workflows/azure-static-web-apps.yml"
+
+jobs:
+  build_and_deploy_job:
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+        lfs: false
+    
+    - name: Use Node.js 22
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+    
+    - name: Build
+      run: |
+        cd ./src/app
+        npm install
+        npm run build:azure
+    
+    - name: Setup Pages
+      uses: actions/configure-pages@v5
+      
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: './src/app'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+    
