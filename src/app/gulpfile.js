@@ -14,7 +14,7 @@ var config = {
     },
     production: {
         inviteCodeMd5: 'd2c5d7b92192270fc10ea028eb2a38e8',
-        functionApiUrl: 'https://laura-und.marvin-stue.de/api'
+        functionApiUrl: 'https://wed-web.azurewebsites.net/api'
     }
 };
 
