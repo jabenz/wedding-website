@@ -235,6 +235,12 @@ $(document).ready(function () {
                     $('#alert-wrapper').html(alert_markup('danger', '<strong>Sorry!</strong> Es gibt Probleme mit der Anmeldung. Melde dich am besten bei uns.'));
                 }
 
+            })
+            .always(function () {
+                // This turnstile variable is magic and will be set by the Turnstile widget
+                if (typeof turnstile !== 'undefined') {
+                    turnstile.reset();
+                }
             });
     });
 
