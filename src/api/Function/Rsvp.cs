@@ -2,8 +2,6 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using api.Configuration;
 using api.Extensions;
 using api.Models;
 using api.Repositories;
@@ -14,7 +12,7 @@ using api.Services;
 
 namespace api;
 
-public class Rsvp(ILogger<Rsvp> logger, /* IOptions<RsvpOptions> options, */ ITableRepository tableRepository, ITurnstileService turnstileService)
+public class Rsvp(ILogger<Rsvp> logger, ITableRepository tableRepository, ITurnstileService turnstileService)
 {
     private readonly ILogger<Rsvp> _logger = logger;
 
@@ -42,26 +40,12 @@ public class Rsvp(ILogger<Rsvp> logger, /* IOptions<RsvpOptions> options, */ ITa
             return new StatusCodeResult(StatusCodes.Status403Forbidden);
         }
 
-        // var isCaptchaValid = await turnstileService.ValidateAsync(turnstileResponse, CancellationToken.None);
-        // if (!isCaptchaValid)
-        // {
-        //     _logger.LogError("Captcha validation failed");
-        //     return new StatusCodeResult(StatusCodes.Status403Forbidden);
-        // }
-
-        // var host = req.Headers.Host.ToString();
-        // if (host == null || !options.Value.AllowedHosts.Any(r => r == host))
-        // {
-        //     _logger.LogError("Invalid host: {Host}", host);
-        //     return new StatusCodeResult(StatusCodes.Status403Forbidden);
-        // }
-
-        // if (options.Value.InviteCode == null)
-        // {
-        //     _logger.LogError("Invite code is not set in configuration");
-        //     return new StatusCodeResult(StatusCodes.Status500InternalServerError);
-        // }
-
+        var isCaptchaValid = await turnstileService.ValidateAsync(turnstileResponse, CancellationToken.None);
+        if (!isCaptchaValid)
+        {
+            _logger.LogError("Captcha validation failed");
+            return new StatusCodeResult(StatusCodes.Status403Forbidden);
+        }
 
         RsvpRequest rsvpRequest;
         try
@@ -75,11 +59,6 @@ public class Rsvp(ILogger<Rsvp> logger, /* IOptions<RsvpOptions> options, */ ITa
             _logger.LogError(ex, "Error parsing RSVP request");
             return new BadRequestObjectResult("Invalid request format");
         }
-
-        // if (rsvpRequest.InviteCode != options.Value.InviteCode)
-        // {
-        //     return new StatusCodeResult(StatusCodes.Status403Forbidden);
-        // }
 
         _logger.LogInformation("Valid rsvp request");
 

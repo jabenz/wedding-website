@@ -15,12 +15,6 @@ builder.Services
     .ConfigureFunctionsApplicationInsights();
 
 builder.Services
-    .AddOptions<RsvpOptions>()
-    .BindConfiguration(nameof(RsvpOptions))
-    .ValidateDataAnnotations()
-    .ValidateOnStart();
-
-builder.Services
     .AddOptions<CosmosDbOptions>()
     .BindConfiguration(nameof(CosmosDbOptions))
     .ValidateDataAnnotations()

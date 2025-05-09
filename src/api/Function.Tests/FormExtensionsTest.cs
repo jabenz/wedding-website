@@ -14,23 +14,10 @@ public class FormExtensionsTest
     private const int Extras = 2;
 
     [Fact]
-    public void ItThrowsIfInviteCodeIsMissing()
-    {
-        // Arrange
-        var form = new FormCollection([]);
-
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => form.GetRsvpRequest());
-    }
-
-    [Fact]
     public void ItThrowsIfNameIsMissing()
     {
         // Arrange
-        var form = new FormCollection(new Dictionary<string, StringValues>
-        {
-            { FormKeys.InviteCode, InviteCode },
-        });
+        var form = new FormCollection([]);
 
         var action = () => form.GetRsvpRequest();
 
@@ -44,7 +31,6 @@ public class FormExtensionsTest
         // Arrange
         var form = new FormCollection(new Dictionary<string, StringValues>
         {
-            { FormKeys.InviteCode, InviteCode },
             { FormKeys.Name, Name },
         });
 
@@ -60,7 +46,6 @@ public class FormExtensionsTest
         // Arrange
         var form = new FormCollection(new Dictionary<string, StringValues>
         {
-            { FormKeys.InviteCode, InviteCode },
             { FormKeys.Name, Name },
             { FormKeys.Email, Email },
         });
@@ -77,7 +62,6 @@ public class FormExtensionsTest
         // Arrange
         var form = new FormCollection(new Dictionary<string, StringValues>
         {
-            { FormKeys.InviteCode, InviteCode },
             { FormKeys.Name, Name },
             { FormKeys.Email, Email },
             { FormKeys.Extras, Extras.ToString() },
