@@ -335,7 +335,7 @@ async function initMap() {
     map = new google.maps.Map(document.getElementById('map-canvas'), {
         zoom: 15,
         center: baseLocation,
-        scrollwheel: false,
+        gestureHandling: "cooperative",
         mapId: "a7db4426599686f6",
     });
 
