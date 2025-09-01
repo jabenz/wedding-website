@@ -24,7 +24,10 @@
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="manifest" href="manifest.json">
   <link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
-
+  <script>
+    // Set to false to hide RSVP form after deadline
+    window.rsvpEnabled = false;
+  </script>
   <script>
     // load css files from CDN if local node_modules fail
     function loadCssFromCDN(css) {
@@ -83,7 +86,11 @@
               </ul>
               <ul class="member-actions">
 
-                <li><a href="#rsvp" class="btn-white btn-small">Anmelden</a></li>
+                <script>
+                  if (window.rsvpEnabled) {
+                    document.write('<li><a href="#rsvp" class="btn-white btn-small">Anmelden</a></li>');
+                  }
+                </script>
               </ul>
             </nav>
           </div>
@@ -106,9 +113,11 @@
       </div>
       <div class="row">
         <div class="col-sm-4 hidden-xs"></div>
-        <div class="col-sm-4 hidden-xs text-center"><a href="#rsvp"
-            class="btn btn-accent btn-large rsvp-btn btn-fill">Anmelden</a>
-        </div>
+        <script>
+          if (window.rsvpEnabled) {
+            document.write('<div class="col-sm-4 hidden-xs text-center"><a href="#rsvp" class="btn btn-accent btn-large rsvp-btn btn-fill">Anmelden</a></div>');
+          }
+        </script>
         <div class="col-sm-4 hidden-xs"></div>
       </div>
     </div>
@@ -187,24 +196,28 @@
             <p><strong>Feier</strong></p>
 
             <h5>Beginn in der <a href="#map" target="_blank"
-                onclick="event.preventDefault(); mapGoToMarker(0);">Eventlocation </a><span class="time">15:30
-                Uhr</span></h5>
-            <p>Jetzt freuen wir uns, euch alle herzlich willkommen zu heißen. Es geht los mit einem Sektempfang im
-              Garten. Bei schlechtem Wetter wird es eine Indoor-Alternative geben. Nach dem Gruppenfoto schneiden wir
-              mit euch die Hochzeitstorte an und es gibt Kaffee-Spezialitäten, hausgemachte Kuchen und Zeit für
-              Gespräche. </p>
+                onclick="event.preventDefault(); mapGoToMarker(0);">Eventlocation</a>
+              <span class="time">15:00 Uhr</span>
+            </h5>
+            <p>Um 15:00 Uhr heißen wir euch herzlich an der Location willkommen.</p>
           </div>
           <div class="wp6">
-            <h5>Abendessen <span class="time">18:30 Uhr</span></h5>
+            <h5>Freie Trauung <span class="time">15:15 Uhr</span></h5>
+            <p>Gegen 15:15 Uhr beginnt unsere freie Trauung im Garten (bei schlechtem Wetter überdacht). Da es Ende Oktober kühl werden kann, denkt bei Bedarf bitte an eine Jacke zum Überziehen.
+            <p>Anschließend stoßen wir gemeinsam beim Sektempfang an und schneiden die Hochzeitstorte an. Es gibt Kaffee-Spezialitäten, hausgemachte Kuchen und Zeit für Gespräche.</p>
+          </div>
+          <div class="wp9">
+            <h5>Abendessen <span class="time">ca. 18:30 Uhr</span></h5>
             <p>Freut euch auf ein köstliches Menü mit einer Auswahl an Vorspeisen, Hauptgerichten und Desserts – von
               Samosas und überbackener Aubergine bis hin zu Mousse au Chocolat.
             </p>
           </div>
-          <div class="wp6">
+          <div class="wp9">
             <h5>Tanzfläche frei! 💃🕺 <span class="time">ca. 21:00 Uhr</span></h5>
             <p>Ab jetzt sorgt unser DJ für Stimmung – die Tanzfläche ist eröffnet! Freut euch auf eine Mischung aus
               Klassikern und aktuellen Hits.
             </p>
+            </div>
           </div>
         </div>
       </div>
@@ -476,13 +489,19 @@
       </div>
       <div class="row">
         <div class="col-md-6 col-sm-12 col-xs-12 leftcol">
-          <div class="wp3">
-            <h5>Wie bestätige ich meine Teilnahme?</h5>
-            <p>Wir würden uns freuen, wenn ihr uns eure Teilnahme so bald wie möglich, spätestens jedoch bis zum
-              <strong>15. August 2025</strong>, bestätigt. Am besten nutzt ihr dafür das <a
-                href="#rsvp">Anmeldeformular</a> auf dieser Seite.
-            </p>
-          </div>
+          <script>
+            if (window.rsvpEnabled) {
+              document.write(`
+                <div class="wp3">
+                  <h5>Wie bestätige ich meine Teilnahme?</h5>
+                  <p>Wir würden uns freuen, wenn ihr uns eure Teilnahme so bald wie möglich, spätestens jedoch bis zum
+                    <strong>15. August 2025</strong>, bestätigt. Am besten nutzt ihr dafür das <a
+                      href="#rsvp">Anmeldeformular</a> auf dieser Seite.
+                  </p>
+                </div>
+              `);
+            }
+          </script>
           <div class="wp3">
             <h5>Habt ihr bestimmte Geschenkewünsche?</h5>
             <p> Wir freuen uns sehr über finanzielle Unterstützung für unser gemeinsames Eheleben! Da wir bereits viele
@@ -614,72 +633,77 @@
       </div>
   </section>
 
-  <section class="rsvp text-center section-padding" id="rsvp">
-
-    <div id="rsvp-modal" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span>
-            </button>
-            <div class="section-padding">
-              <h3>Danke!</h3>
-              <p>Wir freuen uns auf euch!</p>
-              <div id="add-to-cal"></div>
+  <script>
+    if (window.rsvpEnabled) {
+      document.write(`
+        <section class="rsvp text-center section-padding" id="rsvp">
+          <div id="rsvp-modal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span>
+                  </button>
+                  <div class="section-padding">
+                    <h3>Danke!</h3>
+                    <p>Wir freuen uns auf euch!</p>
+                    <div id="add-to-cal"></div>
+                  </div>
+                </div>
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 col-md-offset-3">
+                <h3>Seid dabei und feiert mit uns!</h3>
+                <p>Bitte meldet euch vor dem <strong>15. August 2025</strong> zurück</p>
+                <form id="rsvp-form" class="rsvp-form" action="" method="POST">
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                      <div class="form-input-group">
+                        <i class="fa fa-envelope"></i><input type="email" name="email" class="" placeholder="Email"
+                          required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                      <div class="form-input-group">
+                        <i class="fa fa-user"></i><input name="name" class="" placeholder="Name/Namen" required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                      <div class="form-input-group">
+                        <i class="fa fa-users"></i><input type="number" name="extras" class="" min="0" max="5"
+                          placeholder="Anzahl Personen" required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12" id="alert-wrapper"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                      <button class="btn-fill rsvp-btn">
+                        Anmelden!
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                      <div class="cf-turnstile" data-sitekey="0x4AAAAAABagUN74fvXIJJad"></div>
+                    </div>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-          <h3>Seid dabei und feiert mit uns!</h3>
-          <p>Bitte meldet euch vor dem <strong>15. August 2025</strong> zurück</p>
-          <form id="rsvp-form" class="rsvp-form" action="" method="POST">
-            <div class="row">
-              <div class="col-md-12 col-sm-12">
-                <div class="form-input-group">
-                  <i class="fa fa-envelope"></i><input type="email" name="email" class="" placeholder="Email"
-                    required>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 col-sm-12">
-                <div class="form-input-group">
-                  <i class="fa fa-user"></i><input name="name" class="" placeholder="Name/Namen" required>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 col-sm-12">
-                <div class="form-input-group">
-                  <i class="fa fa-users"></i><input type="number" name="extras" class="" min="0" max="5"
-                    placeholder="Anzahl Personen" required>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 col-sm-12" id="alert-wrapper"></div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 col-sm-12">
-                <button class="btn-fill rsvp-btn">
-                  Anmelden!
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12 col-sm-12">
-                <div class="cf-turnstile" data-sitekey="0x4AAAAAABagUN74fvXIJJad"></div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
+        </section>
+      `);
+    }
+  </script>
   <footer>
     <div class="container">
       <div class="row">
